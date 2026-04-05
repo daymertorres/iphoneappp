@@ -197,7 +197,7 @@ button {
   display: grid;
   grid-template-columns: 1fr 82px 1fr;
   align-items: center;
-  margin-top: 8px;
+  margin-top: 14px;
   padding: 0;
 }
 
@@ -253,7 +253,7 @@ button {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   align-items: end;
-  padding-bottom: 50px;
+  padding-bottom: 10px;
   margin-top: auto;
 }
 
