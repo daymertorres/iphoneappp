@@ -14,424 +14,561 @@
   <style>
     :root {
       --bg: #000;
-      --panel: #111;
-      --panel-2: #1c1c1e;
       --text: #fff;
-      --muted: #8e8e93;
-      --green: #34c759;
-      --key: #2c2c2e;
-      --key-active: #3a3a3c;
-      --danger: #ff3b30;
-      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --muted: rgba(235,235,245,.6);
+      --ios-blue: #0a84ff;
+      --ios-green: #32d74b;
+      --key: #313135;
+      --key-active: #45454b;
       --safe-top: env(safe-area-inset-top, 0px);
       --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --sheet: #1c1c1e;
+      --sheet-line: rgba(255,255,255,.05);
     }
 
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    html, body { margin: 0; height: 100%; background: var(--bg); font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif; color: var(--text); }
-    body {
-      display: grid;
-      place-items: center;
-      overflow: hidden;
-      background:
-        radial-gradient(circle at top, rgba(255,255,255,.05), transparent 30%),
-        linear-gradient(180deg, #0a0a0a 0%, #000 100%);
-    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; }
+    html, body { margin: 0; background: #000; color: #fff; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif; height: 100%; overflow: hidden; }
+    body { display: grid; place-items: center; }
 
-    .phone-shell {
+    .phone {
+      position: relative;
       width: min(100vw, 430px);
       height: 100dvh;
-      max-height: 932px;
       background: #000;
-      position: relative;
       overflow: hidden;
     }
 
-    .status-space {
-      height: calc(52px + var(--safe-top));
+    .screen {
+      position: relative;
+      width: 100%;
+      height: 100%;
       padding-top: var(--safe-top);
+      background: #000;
+    }
+
+    .statusbar {
+      height: 48px;
+      padding: 0 18px;
       display: flex;
       align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      color: rgba(255,255,255,.82);
-      letter-spacing: 0.2px;
-      opacity: .92;
+      justify-content: space-between;
+      font-weight: 600;
+      letter-spacing: .2px;
+      font-size: 17px;
     }
+
+    .status-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .status-right svg,
+    .status-left svg { display: block; }
 
     .app {
-      height: calc(100% - 52px - var(--safe-top));
+      position: absolute;
+      inset: calc(48px + var(--safe-top)) 0 0 0;
       display: flex;
       flex-direction: column;
-      padding: 0 18px calc(16px + var(--safe-bottom));
+      padding: 2px 24px 0;
     }
 
-    .header {
-      text-align: center;
-      padding: 6px 0 8px;
+    .utility-row {
+      height: 34px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding-top: 4px;
     }
 
-    .title {
-      font-size: 34px;
-      font-weight: 700;
-      letter-spacing: -0.6px;
-      margin: 6px 0 0;
-    }
-
-    .number-area {
-      min-height: 116px;
+    .utility-icon {
+      width: 32px;
+      height: 32px;
       display: grid;
       place-items: center;
-      padding: 4px 0 14px;
     }
 
-    .number-display {
-      width: 100%;
+    .typed-number {
       text-align: center;
-      font-size: clamp(26px, 6vw, 38px);
+      font-size: 27px;
       font-weight: 300;
-      letter-spacing: .5px;
-      word-break: break-all;
-      line-height: 1.15;
-      min-height: 44px;
+      letter-spacing: .6px;
+      min-height: 90px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 12px;
     }
-
-    .cursor::after {
-      content: "";
-      display: inline-block;
-      width: 2px;
-      height: 1em;
-      background: rgba(255,255,255,.9);
-      margin-left: 3px;
-      vertical-align: -2px;
-      animation: blink 1s steps(1) infinite;
-    }
-
-    @keyframes blink { 50% { opacity: 0; } }
 
     .dialpad {
+      width: 100%;
+      max-width: 342px;
+      margin: 34px auto 0;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 12px 18px;
-      margin-top: auto;
+      gap: 18px 23px;
     }
 
     .key {
-      position: relative;
-      aspect-ratio: 1/1;
+      appearance: none;
       border: 0;
+      width: 88px;
+      height: 88px;
       border-radius: 50%;
       background: var(--key);
-      color: var(--text);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.03);
+      color: #fff;
+      justify-self: center;
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
-      transition: transform .08s ease, background .12s ease;
-      user-select: none;
+      justify-content: center;
+      transition: transform .09s ease, background .09s ease;
+      padding: 0;
     }
-
-    .key:active,
-    .key.pressed {
-      background: var(--key-active);
-      transform: scale(.97);
-    }
+    .key:active { transform: scale(.97); background: var(--key-active); }
 
     .digit {
-      font-size: 34px;
+      font-size: 31px;
       line-height: 1;
       font-weight: 400;
-      transform: translateY(2px);
+      margin-top: 3px;
     }
 
     .letters {
       margin-top: 4px;
       font-size: 11px;
       line-height: 1;
-      letter-spacing: 1.6px;
-      color: rgba(255,255,255,.86);
+      font-weight: 600;
+      letter-spacing: 2.4px;
+      min-height: 11px;
     }
 
     .actions {
+      width: 100%;
+      max-width: 342px;
+      margin: 18px auto 0;
       display: grid;
       grid-template-columns: 1fr 88px 1fr;
       align-items: center;
-      gap: 16px;
-      padding: 18px 8px 8px;
     }
 
-    .ghost {
-      width: 54px;
-      height: 54px;
-      border-radius: 50%;
-      border: 0;
-      background: transparent;
-      color: var(--muted);
-      justify-self: center;
-      display: grid;
-      place-items: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity .15s ease;
-    }
-
-    .ghost.visible {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .call-btn {
+    .call {
       width: 88px;
       height: 88px;
       border-radius: 50%;
       border: 0;
-      background: var(--green);
-      color: white;
-      box-shadow: var(--shadow);
+      background: var(--ios-green);
       display: grid;
       place-items: center;
       justify-self: center;
-      transition: transform .12s ease, filter .12s ease;
     }
 
-    .call-btn:active { transform: scale(.97); filter: brightness(.96); }
+    .backspace {
+      justify-self: center;
+      width: 34px;
+      height: 34px;
+      display: none;
+      place-items: center;
+      background: transparent;
+      border: 0;
+      color: rgba(255,255,255,.9);
+      padding: 0;
+    }
+    .backspace.show { display: grid; }
+
+    .tabs {
+      margin-top: auto;
+      padding: 10px 2px 0;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 2px;
+      align-items: end;
+    }
+
+    .tab {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1;
+    }
+    .tab svg { display: block; }
+    .tab.active { color: var(--ios-blue); }
 
     .home-indicator {
       width: 134px;
       height: 5px;
       border-radius: 999px;
-      background: rgba(255,255,255,.88);
-      margin: 10px auto 0;
-      opacity: .95;
+      background: rgba(255,255,255,.95);
+      margin: 10px auto calc(8px + var(--safe-bottom));
       flex-shrink: 0;
     }
 
-    .fab-label {
-      font-size: 12px;
-      color: var(--muted);
-      text-align: center;
-      margin-top: 4px;
-    }
-
-    .modal-backdrop {
+    .overlay {
       position: absolute;
       inset: 0;
-      background: rgba(0,0,0,.48);
       display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      z-index: 20;
-      backdrop-filter: blur(10px);
+      z-index: 30;
+    }
+    .overlay.show { display: block; }
+
+    .overlay-dim {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,.6);
     }
 
-    .modal-backdrop.show { display: flex; }
-
-    .modal {
-      width: min(100%, 320px);
-      background: rgba(28,28,30,.94);
-      border-radius: 14px;
+    .imei-sheet {
+      position: absolute;
+      left: 10px;
+      right: 10px;
+      top: calc(56px + var(--safe-top));
+      bottom: calc(18px + var(--safe-bottom));
+      background: rgba(28,28,30,.98);
+      border-radius: 18px;
+      box-shadow: 0 22px 50px rgba(0,0,0,.45);
       overflow: hidden;
-      box-shadow: var(--shadow);
-      text-align: center;
     }
 
-    .modal-body {
-      padding: 18px 18px 14px;
+    .imei-sheet::before {
+      content: "";
+      position: absolute;
+      top: -16px;
+      left: 18px;
+      right: 18px;
+      height: 20px;
+      border-radius: 18px 18px 0 0;
+      background: rgba(28,28,30,.5);
+      filter: blur(1px);
     }
 
-    .modal-title {
-      font-size: 17px;
-      font-weight: 600;
-      margin-bottom: 8px;
+    .sheet-header {
+      padding: 14px 14px 0;
+      position: relative;
+      z-index: 1;
     }
 
-    .modal-text {
-      font-size: 14px;
-      line-height: 1.45;
-      color: rgba(255,255,255,.88);
-      white-space: pre-line;
-      word-break: break-word;
-    }
-
-    .modal-actions {
-      border-top: 1px solid rgba(255,255,255,.08);
-      display: grid;
-      grid-template-columns: 1fr;
-    }
-
-    .modal-btn {
+    .cancel {
       appearance: none;
       border: 0;
       background: transparent;
-      color: #0a84ff;
-      padding: 14px;
-      font-size: 17px;
-      font-weight: 500;
+      color: var(--ios-blue);
+      font-size: 18px;
+      padding: 0;
+      font-weight: 400;
     }
 
-    .hint {
+    .sheet-scroll {
+      height: calc(100% - 38px);
+      overflow: auto;
+      padding: 18px 26px 90px;
       text-align: center;
-      font-size: 12px;
-      color: var(--muted);
-      margin-top: 8px;
-      min-height: 16px;
+      -webkit-overflow-scrolling: touch;
     }
 
-    svg { display: block; }
+    .sheet-title {
+      font-size: 38px;
+      line-height: 1.1;
+      font-weight: 700;
+      letter-spacing: -.9px;
+      margin: 10px 0 34px;
+    }
+
+    .label {
+      font-size: 18px;
+      color: rgba(255,255,255,.9);
+      margin-bottom: 6px;
+    }
+
+    .value {
+      font-size: 23px;
+      line-height: 1.2;
+      font-weight: 400;
+      margin-bottom: 22px;
+      word-break: break-all;
+    }
+
+    .value.small { font-size: 21px; }
+
+    .barcode-box {
+      width: 100%;
+      background: #fff;
+      padding: 14px 10px;
+      margin: 0 auto 34px;
+    }
+
+    .barcode-box svg {
+      width: 100%;
+      height: 54px;
+      background: #fff;
+      display: block;
+    }
+
+    .imei-group { margin-top: 6px; }
+
+    @media (max-width: 380px) {
+      .dialpad { gap: 14px 18px; max-width: 320px; }
+      .key { width: 82px; height: 82px; }
+      .actions, .dialpad { max-width: 320px; }
+      .tabs { font-size: 11px; }
+      .sheet-title { font-size: 34px; }
+      .value { font-size: 20px; }
+    }
   </style>
 </head>
 <body>
-  <div class="phone-shell">
-    <div class="status-space" id="statusTime">9:41</div>
-
-    <main class="app">
-      <header class="header">
-        <div class="title">Teclado</div>
-      </header>
-
-      <section class="number-area">
-        <div class="number-display cursor" id="numberDisplay" aria-live="polite"></div>
-      </section>
-
-      <section class="dialpad" id="dialpad"></section>
-
-      <div class="hint" id="hint">Marca *#06# para ver el IMEI</div>
-
-      <div class="actions">
-        <button class="ghost" id="clearBtn" aria-label="Borrar último dígito">
-          <svg width="28" height="22" viewBox="0 0 28 22" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <path d="M10 1H25C26.1046 1 27 1.89543 27 3V19C27 20.1046 26.1046 21 25 21H10L1 11L10 1Z" stroke="currentColor" stroke-width="2"/>
-            <path d="M19 7L13 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            <path d="M13 7L19 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  <div class="phone">
+    <div class="screen">
+      <div class="statusbar">
+        <div class="status-left" id="statusTime">2:35</div>
+        <div class="status-right">
+          <svg width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <rect x="0" y="6" width="3" height="6" rx="1" fill="white" opacity=".65"/>
+            <rect x="5" y="4" width="3" height="8" rx="1" fill="white" opacity=".75"/>
+            <rect x="10" y="2" width="3" height="10" rx="1" fill="white" opacity=".85"/>
+            <rect x="15" y="0" width="3" height="12" rx="1" fill="white"/>
           </svg>
-        </button>
-
-        <button class="call-btn" id="callBtn" aria-label="Llamar">
-          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <path d="M20.01 15.38L16.73 15C15.94 14.91 15.16 15.18 14.58 15.73L12.2 17.99C8.54 16.12 5.54 13.13 3.67 9.46L5.94 7.08C6.5 6.5 6.77 5.72 6.68 4.93L6.3 1.68C6.15 0.42 5.09 -0.53 3.82 -0.53H1.59C0.18 -0.53 -0.99 0.64 -0.91 2.05C-0.3 12.49 8.03 20.81 18.46 21.42C19.87 21.5 21.04 20.34 21.04 18.92V16.69C21.05 15.43 20.1 14.37 18.84 14.22" transform="translate(2 2)" fill="white"/>
+          <svg width="18" height="14" viewBox="0 0 18 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M1 5.5C5-0.2 13-0.2 17 5.5" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+            <path d="M4 8.5C6.8 5.2 11.2 5.2 14 8.5" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+            <circle cx="9" cy="11" r="1.4" fill="white"/>
           </svg>
-        </button>
-
-        <div></div>
+          <svg width="31" height="15" viewBox="0 0 31 15" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <rect x="0.75" y="0.75" width="26.5" height="13.5" rx="4.25" stroke="white" stroke-width="1.5"/>
+            <rect x="2.8" y="2.8" width="20.8" height="9.4" rx="2.4" fill="white"/>
+            <rect x="27.9" y="4.7" width="2.3" height="5.6" rx="1.1" fill="white" opacity=".9"/>
+            <text x="13.2" y="10.6" text-anchor="middle" font-size="8.5" font-family="-apple-system, BlinkMacSystemFont, sans-serif" fill="black" font-weight="700">80</text>
+          </svg>
+        </div>
       </div>
 
-      <div class="home-indicator"></div>
-    </main>
+      <main class="app">
+        <div class="utility-row">
+          <div class="utility-icon" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="1.5" y="1.5" width="16.5" height="16.5" rx="4" fill="#0A84FF"/>
+              <path d="M9.2 6.4H6.4V13.8H8.2V11.3H9.1C11.1 11.3 12.4 10.3 12.4 8.8C12.4 7.2 11.2 6.4 9.2 6.4Z" fill="white"/>
+              <path d="M8.8 9.9H8.2V7.8H8.8C9.7 7.8 10.4 8.1 10.4 8.8C10.4 9.5 9.8 9.9 8.8 9.9Z" fill="#0A84FF"/>
+              <path d="M22 7L25 10" stroke="white" stroke-width="1.7" stroke-linecap="round"/>
+              <path d="M19 10L22 7" stroke="white" stroke-width="1.7" stroke-linecap="round"/>
+              <path d="M19 15L22 18" stroke="white" stroke-width="1.7" stroke-linecap="round"/>
+              <path d="M22 18L25 15" stroke="white" stroke-width="1.7" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="utility-icon" aria-hidden="true">
+            <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M27.3 17.2C27.3 23 22.6 27.7 16.8 27.7C11 27.7 6.3 23 6.3 17.2C6.3 11.4 11 6.7 16.8 6.7C20.4 6.7 23.7 8.5 25.6 11.3" stroke="#0A84FF" stroke-width="2.5" stroke-linecap="round"/>
+              <path d="M26.4 5.9V11.8H20.5" stroke="#0A84FF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="24.4" cy="24.8" r="5.1" stroke="#0A84FF" stroke-width="2.5"/>
+              <path d="M24.4 22.1V27.5" stroke="#0A84FF" stroke-width="2.5" stroke-linecap="round"/>
+              <path d="M21.7 24.8H27.1" stroke="#0A84FF" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </div>
 
-    <div class="modal-backdrop" id="modalBackdrop" aria-hidden="true">
-      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-        <div class="modal-body">
-          <div class="modal-title" id="modalTitle">IMEI</div>
-          <div class="modal-text" id="modalText"></div>
+        <div class="typed-number" id="display"></div>
+
+        <section class="dialpad" id="dialpad"></section>
+
+        <div class="actions">
+          <div></div>
+          <button class="call" type="button" aria-label="Llamar" id="callBtn">
+            <svg width="38" height="38" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M20.01 15.38L16.73 15C15.94 14.91 15.16 15.18 14.58 15.73L12.2 17.99C8.54 16.12 5.54 13.13 3.67 9.46L5.94 7.08C6.5 6.5 6.77 5.72 6.68 4.93L6.3 1.68C6.15 0.42 5.09 -0.53 3.82 -0.53H1.59C0.18 -0.53 -0.99 0.64 -0.91 2.05C-0.3 12.49 8.03 20.81 18.46 21.42C19.87 21.5 21.04 20.34 21.04 18.92V16.69C21.05 15.43 20.1 14.37 18.84 14.22" transform="translate(2 2)" fill="white"/>
+            </svg>
+          </button>
+          <button class="backspace" id="backspace" type="button" aria-label="Borrar">
+            <svg width="36" height="26" viewBox="0 0 36 26" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M12.5 3H30C31.6569 3 33 4.34315 33 6V20C33 21.6569 31.6569 23 30 23H12.5L3 13L12.5 3Z" fill="#2C2C2E"/>
+              <path d="M23 9L17 17" stroke="white" stroke-width="2.3" stroke-linecap="round"/>
+              <path d="M17 9L23 17" stroke="white" stroke-width="2.3" stroke-linecap="round"/>
+            </svg>
+          </button>
         </div>
-        <div class="modal-actions">
-          <button class="modal-btn" id="okBtn">OK</button>
-        </div>
+
+        <nav class="tabs" aria-label="Navegación inferior">
+          <div class="tab">
+            <svg width="31" height="31" viewBox="0 0 31 31" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M15.5 3L19.3 11L28.2 12.1L21.7 18.2L23.4 27L15.5 22.8L7.6 27L9.3 18.2L2.8 12.1L11.7 11L15.5 3Z"/></svg>
+            <span>Favoritos</span>
+          </div>
+          <div class="tab">
+            <svg width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="15.5" cy="15.5" r="11" stroke="currentColor" stroke-width="2.8"/><path d="M15.5 9V15.8L20.5 18.9" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Recientes</span>
+          </div>
+          <div class="tab">
+            <svg width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="15.5" cy="12" r="6.4" fill="currentColor"/><path d="M5.6 25.8C6.9 21.3 10.8 18.7 15.5 18.7C20.2 18.7 24.1 21.3 25.4 25.8" fill="currentColor"/></svg>
+            <span>Contactos</span>
+          </div>
+          <div class="tab active">
+            <svg width="31" height="31" viewBox="0 0 31 31" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><circle cx="7" cy="7" r="3"/><circle cx="15.5" cy="7" r="3"/><circle cx="24" cy="7" r="3"/><circle cx="7" cy="15.5" r="3"/><circle cx="15.5" cy="15.5" r="3"/><circle cx="24" cy="15.5" r="3"/><circle cx="7" cy="24" r="3"/><circle cx="15.5" cy="24" r="3"/><circle cx="24" cy="24" r="3"/></svg>
+            <span>Teclado</span>
+          </div>
+          <div class="tab">
+            <svg width="40" height="31" viewBox="0 0 40 31" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="12" width="16" height="9" rx="4.5" stroke="currentColor" stroke-width="2.4"/><rect x="22" y="12" width="16" height="9" rx="4.5" stroke="currentColor" stroke-width="2.4"/><path d="M18 16.5H22" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+            <span>Buzón de voz</span>
+          </div>
+        </nav>
+
+        <div class="home-indicator"></div>
+      </main>
+
+      <div class="overlay" id="imeiOverlay" aria-hidden="true">
+        <div class="overlay-dim"></div>
+        <section class="imei-sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+          <div class="sheet-header">
+            <button class="cancel" id="cancelBtn" type="button">Cancelar</button>
+          </div>
+          <div class="sheet-scroll">
+            <div class="sheet-title" id="sheetTitle">Información</div>
+
+            <div class="label">EID</div>
+            <div class="value small" id="eidValue"></div>
+            <div class="barcode-box"><svg id="eidBarcode" viewBox="0 0 320 54" preserveAspectRatio="none"></svg></div>
+
+            <div class="imei-group">
+              <div class="label" id="imei1Label"></div>
+              <div class="value" id="imei1Value"></div>
+              <div class="barcode-box"><svg id="imei1Barcode" viewBox="0 0 320 54" preserveAspectRatio="none"></svg></div>
+            </div>
+
+            <div class="imei-group">
+              <div class="label" id="imei2Label"></div>
+              <div class="value" id="imei2Value"></div>
+              <div class="barcode-box"><svg id="imei2Barcode" viewBox="0 0 320 54" preserveAspectRatio="none"></svg></div>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   </div>
 
   <script>
-    const keys = [
-      { value: '1', letters: '' },
-      { value: '2', letters: 'ABC' },
-      { value: '3', letters: 'DEF' },
-      { value: '4', letters: 'GHI' },
-      { value: '5', letters: 'JKL' },
-      { value: '6', letters: 'MNO' },
-      { value: '7', letters: 'PQRS' },
-      { value: '8', letters: 'TUV' },
-      { value: '9', letters: 'WXYZ' },
-      { value: '*', letters: '' },
-      { value: '0', letters: '+' },
-      { value: '#', letters: '' }
-    ];
-
-    const display = document.getElementById('numberDisplay');
-    const clearBtn = document.getElementById('clearBtn');
-    const modalBackdrop = document.getElementById('modalBackdrop');
-    const modalText = document.getElementById('modalText');
-    const okBtn = document.getElementById('okBtn');
-    const hint = document.getElementById('hint');
+    const display = document.getElementById('display');
     const dialpad = document.getElementById('dialpad');
+    const backspace = document.getElementById('backspace');
+    const imeiOverlay = document.getElementById('imeiOverlay');
+    const cancelBtn = document.getElementById('cancelBtn');
     const statusTime = document.getElementById('statusTime');
+
+    const deviceInfo = {
+      eid: '89049032007208882600188086421161',
+      imei1: '359626458246633',
+      imei2: '359626458239075'
+    };
+
+    const keys = [
+      ['1', ''], ['2', 'ABC'], ['3', 'DEF'],
+      ['4', 'GHI'], ['5', 'JKL'], ['6', 'MNO'],
+      ['7', 'PQRS'], ['8', 'TUV'], ['9', 'WXYZ'],
+      ['*', ''], ['0', '+'], ['#', '']
+    ];
 
     let typed = '';
 
-    const demoIMEI1 = '356789123456789';
-    const demoIMEI2 = '356789123450123';
-
     function updateTime() {
       const now = new Date();
-      statusTime.textContent = now.toLocaleTimeString('es-PE', {
-        hour: 'numeric',
-        minute: '2-digit'
-      });
+      statusTime.textContent = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
     }
 
-    function updateDisplay() {
+    function renderDisplay() {
       display.textContent = typed;
-      display.classList.toggle('cursor', typed.length === 0);
-      clearBtn.classList.toggle('visible', typed.length > 0);
-      hint.textContent = typed === '*#06#'
-        ? 'Código detectado'
-        : (typed.length ? ' ' : 'Marca *#06# para ver el IMEI');
+      backspace.classList.toggle('show', typed.length > 0);
     }
 
-    function pressKey(value) {
-      if (typed.length >= 22) return;
-      typed += value;
-      updateDisplay();
-
+    function addChar(char) {
+      if (typed.length >= 24 || imeiOverlay.classList.contains('show')) return;
+      typed += char;
+      renderDisplay();
       if (typed === '*#06#') {
-        showImei();
+        setTimeout(openImeiSheet, 110);
       }
     }
 
-    function deleteLast() {
+    function removeChar() {
       typed = typed.slice(0, -1);
-      updateDisplay();
+      renderDisplay();
     }
 
     function resetInput() {
       typed = '';
-      updateDisplay();
+      renderDisplay();
     }
 
-    function showImei() {
-      modalText.textContent = `IMEI\n${demoIMEI1}\n\nIMEI2\n${demoIMEI2}`;
-      modalBackdrop.classList.add('show');
-      modalBackdrop.setAttribute('aria-hidden', 'false');
-      setTimeout(resetInput, 80);
+    function drawFakeBarcode(svg, value) {
+      const bars = [];
+      let x = 8;
+      const height = 46;
+      const seed = Array.from(value).map((c, i) => (c.charCodeAt(0) + i) % 4);
+
+      bars.push(`<rect x="${x}" y="2" width="2" height="${height}" fill="black"/>`);
+      x += 4;
+      bars.push(`<rect x="${x}" y="2" width="1" height="${height}" fill="black"/>`);
+      x += 3;
+      bars.push(`<rect x="${x}" y="2" width="2" height="${height}" fill="black"/>`);
+      x += 5;
+
+      seed.forEach((n, i) => {
+        const pattern = [1, 2, 1 + (n % 2), 3, 2, 1, 2 + ((i + n) % 2)];
+        pattern.forEach((w, idx) => {
+          if (idx % 2 === 0) {
+            bars.push(`<rect x="${x}" y="2" width="${w}" height="${height}" fill="black"/>`);
+          }
+          x += w + (idx % 2 === 0 ? 1 : 0);
+        });
+        x += 2 + (n % 2);
+      });
+
+      bars.push(`<rect x="${x}" y="2" width="2" height="${height}" fill="black"/>`);
+      x += 4;
+      bars.push(`<rect x="${x}" y="2" width="1" height="${height}" fill="black"/>`);
+      x += 3;
+      bars.push(`<rect x="${x}" y="2" width="2" height="${height}" fill="black"/>`);
+
+      svg.innerHTML = `<rect x="0" y="0" width="320" height="54" fill="white"/>${bars.join('')}`;
     }
 
-    function hideModal() {
-      modalBackdrop.classList.remove('show');
-      modalBackdrop.setAttribute('aria-hidden', 'true');
+    function fillSheet() {
+      document.getElementById('eidValue').textContent = deviceInfo.eid;
+      document.getElementById('imei1Label').textContent = `IMEI ${deviceInfo.imei1}`;
+      document.getElementById('imei1Value').textContent = '';
+      document.getElementById('imei2Label').textContent = `IMEI2 ${deviceInfo.imei2}`;
+      document.getElementById('imei2Value').textContent = '';
+
+      drawFakeBarcode(document.getElementById('eidBarcode'), deviceInfo.eid);
+      drawFakeBarcode(document.getElementById('imei1Barcode'), deviceInfo.imei1);
+      drawFakeBarcode(document.getElementById('imei2Barcode'), deviceInfo.imei2);
     }
 
-    function buildDialpad() {
-      keys.forEach((key) => {
-        const btn = document.createElement('button');
-        btn.className = 'key';
-        btn.setAttribute('type', 'button');
-        btn.setAttribute('aria-label', `Tecla ${key.value}`);
-        btn.innerHTML = `
-          <div class="digit">${key.value}</div>
-          <div class="letters">${key.letters || '&nbsp;'}</div>
-        `;
-        btn.addEventListener('click', () => pressKey(key.value));
-        dialpad.appendChild(btn);
+    function openImeiSheet() {
+      fillSheet();
+      imeiOverlay.classList.add('show');
+      imeiOverlay.setAttribute('aria-hidden', 'false');
+      resetInput();
+    }
+
+    function closeImeiSheet() {
+      imeiOverlay.classList.remove('show');
+      imeiOverlay.setAttribute('aria-hidden', 'true');
+    }
+
+    function buildPad() {
+      keys.forEach(([value, letters]) => {
+        const button = document.createElement('button');
+        button.className = 'key';
+        button.type = 'button';
+        button.innerHTML = `<div class="digit">${value}</div><div class="letters">${letters || '&nbsp;'}</div>`;
+        button.addEventListener('click', () => addChar(value));
+        dialpad.appendChild(button);
       });
     }
 
-    clearBtn.addEventListener('click', deleteLast);
-    clearBtn.addEventListener('contextmenu', (e) => e.preventDefault());
-    okBtn.addEventListener('click', hideModal);
-    modalBackdrop.addEventListener('click', (e) => {
-      if (e.target === modalBackdrop) hideModal();
+    backspace.addEventListener('click', removeChar);
+    cancelBtn.addEventListener('click', closeImeiSheet);
+    imeiOverlay.addEventListener('click', (e) => {
+      if (e.target.classList.contains('overlay-dim')) closeImeiSheet();
     });
 
     document.getElementById('callBtn').addEventListener('click', () => {
@@ -440,25 +577,19 @@
     });
 
     document.addEventListener('keydown', (e) => {
-      if (/^[0-9*#]$/.test(e.key)) {
-        pressKey(e.key);
-      } else if (e.key === 'Backspace') {
-        deleteLast();
-      } else if (e.key === 'Escape') {
-        hideModal();
-      }
+      if (/^[0-9*#]$/.test(e.key)) addChar(e.key);
+      else if (e.key === 'Backspace') removeChar();
+      else if (e.key === 'Escape') closeImeiSheet();
     });
 
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js').catch(() => {});
-      });
+      window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
     }
 
-    buildDialpad();
-    updateDisplay();
+    buildPad();
+    renderDisplay();
     updateTime();
-    setInterval(updateTime, 1000 * 30);
+    setInterval(updateTime, 30000);
   </script>
 </body>
 </html>
