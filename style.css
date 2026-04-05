@@ -57,7 +57,7 @@ button {
   padding-top: max(env(safe-area-inset-top), 18px);
   padding-left: 16px;
   padding-right: 16px;
-  padding-bottom: max(env(safe-area-inset-bottom), 10px);
+  padding-bottom: 0px;
   display: flex;
   flex-direction: column;
 }
@@ -249,11 +249,11 @@ button {
 
 /* BOTTOM TABS */
 .bottom-tabs {
-  height: 86px;
+  height: 65px;         /* Bajamos la altura de 86px a 65px para compactar */
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  align-items: end;
-  padding-bottom: -50px;
+  align-items: end;     /* Mantiene los iconos pegados al suelo de la barra */
+  padding-bottom: 5px;  /* Un pequeño margen para que no toquen el borde físico */
   margin-top: auto;
 }
 
@@ -261,8 +261,8 @@ button {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: end;
-  gap: 3px;
+  justify-content: flex-end; /* Asegura que todo se empuje hacia abajo */
+  gap: 2px;
   color: #8e8e93;
 }
 
