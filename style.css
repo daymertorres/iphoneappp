@@ -119,7 +119,7 @@ button {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 40px;
+  padding-top: 50px;
 }
 
 .display {
@@ -140,7 +140,7 @@ button {
 
 .keypad {
   width: 100%;
-  max-width: 332px;
+  max-width: 300px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   column-gap: 0px;
