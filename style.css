@@ -119,20 +119,19 @@ button {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center; /* IMPORTANTE: Cambia 'padding-top' por 'justify-content: center' para centrar todo el bloque */
-  /* padding-top: 50px; <-- Borra esto */
+  padding-top: 50px;
 }
 
 .display {
   width: 100%;
   min-height: 86px;
   text-align: center;
-  font-size: 38px; /* Ligeramente más grande */
+  font-size: 36px;
   line-height: 1.1;
   font-weight: 300;
-  letter-spacing: 1px; /* Añade un poco de espacio entre caracteres */
-  padding-top: 20px;
-  margin-bottom: 25px; /* Aumentamos el margen inferior para separar del teclado */
+  letter-spacing: 0;
+  padding-top: 30px;
+  margin-bottom: 6px;
   color: #fff;
   white-space: nowrap;
   overflow: hidden;
@@ -250,21 +249,20 @@ button {
 
 /* BOTTOM TABS */
 .bottom-tabs {
-  height: 96px; /* Aumentamos la altura de 86px a unos 96px para que haya más 'aire' */
+  height: 86px;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  align-items: center; /* IMPORTANTE: Cambia 'end' por 'center' para un alineado vertical uniforme */
-  padding-bottom: 30px; /* IMPORTANTE: Aumentamos para dejar espacio a la barra de inicio de iOS */
+  align-items: end;
+  padding-bottom: 5px;
   margin-top: auto;
-  border-top: 1px solid #222; /* Opcional: A menudo hay una línea tenue divisoria */
 }
 
 .tab {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center; /* Cambia 'end' por 'center' */
-  gap: 8px; /* Aumentamos el hueco entre el icono y el texto de 3px a unos 8px */
+  justify-content: end;
+  gap: 3px;
   color: #8e8e93;
 }
 
