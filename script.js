@@ -110,37 +110,56 @@ keys.forEach((key) => {
   });
 });
 
-deleteBtn.addEventListener("click", () => {
-  entered = entered.slice(0, -1);
-  updateDisplay();
-});
+let deleteHoldTimer = null;
+let deleteRepeatTimer = null;
+let deleteHoldTriggered = false;
 
-deleteBtn.addEventListener("touchstart", (e) => {
+deleteBtn.addEventListener("pointerdown", startDeletePress);
+deleteBtn.addEventListener("pointerup", endDeletePress);
+deleteBtn.addEventListener("pointerleave", endDeletePress);
+deleteBtn.addEventListener("pointercancel", endDeletePress);
+
+function startDeletePress(e) {
   e.preventDefault();
-}, { passive: false });
 
-let deletePressTimer = null;
+  if (!entered.length) return;
 
-deleteBtn.addEventListener("mousedown", startDeleteHold);
-deleteBtn.addEventListener("touchstart", startDeleteHold, { passive: true });
-deleteBtn.addEventListener("mouseup", stopDeleteHold);
-deleteBtn.addEventListener("mouseleave", stopDeleteHold);
-deleteBtn.addEventListener("touchend", stopDeleteHold);
+  deleteHoldTriggered = false;
 
-function startDeleteHold() {
-  deletePressTimer = setTimeout(() => {
-    entered = "";
-    updateDisplay();
-  }, 700);
+  deleteHoldTimer = setTimeout(() => {
+    deleteHoldTriggered = true;
+
+    deleteRepeatTimer = setInterval(() => {
+      if (!entered.length) {
+        clearInterval(deleteRepeatTimer);
+        deleteRepeatTimer = null;
+        return;
+      }
+
+      entered = entered.slice(0, -1);
+      updateDisplay();
+    }, 70);
+  }, 420);
 }
 
-function stopDeleteHold() {
-  if (deletePressTimer) {
-    clearTimeout(deletePressTimer);
-    deletePressTimer = null;
+function endDeletePress(e) {
+  e.preventDefault();
+
+  if (deleteHoldTimer) {
+    clearTimeout(deleteHoldTimer);
+    deleteHoldTimer = null;
+  }
+
+  if (deleteRepeatTimer) {
+    clearInterval(deleteRepeatTimer);
+    deleteRepeatTimer = null;
+  }
+
+  if (!deleteHoldTriggered && entered.length) {
+    entered = entered.slice(0, -1);
+    updateDisplay();
   }
 }
-
 callBtn.addEventListener("click", () => {
   if (entered === "*#06#") {
     openInfoSheet();
