@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Teléfono" />
+  <meta name="format-detection" content="telephone=no" />
+  <title>Teléfono</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icons/icon-180.png" />
+  <style>
+    :root {
+      --bg: #000;
+      --panel: #111;
+      --panel-2: #1c1c1e;
+      --text: #fff;
+      --muted: #8e8e93;
+      --green: #34c759;
+      --key: #2c2c2e;
+      --key-active: #3a3a3c;
+      --danger: #ff3b30;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body { margin: 0; height: 100%; background: var(--bg); font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif; color: var(--text); }
+    body {
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at top, rgba(255,255,255,.05), transparent 30%),
+        linear-gradient(180deg, #0a0a0a 0%, #000 100%);
+    }
+
+    .phone-shell {
+      width: min(100vw, 430px);
+      height: 100dvh;
+      max-height: 932px;
+      background: #000;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .status-space {
+      height: calc(52px + var(--safe-top));
+      padding-top: var(--safe-top);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: rgba(255,255,255,.82);
+      letter-spacing: 0.2px;
+      opacity: .92;
+    }
+
+    .app {
+      height: calc(100% - 52px - var(--safe-top));
+      display: flex;
+      flex-direction: column;
+      padding: 0 18px calc(16px + var(--safe-bottom));
+    }
+
+    .header {
+      text-align: center;
+      padding: 6px 0 8px;
+    }
+
+    .title {
+      font-size: 34px;
+      font-weight: 700;
+      letter-spacing: -0.6px;
+      margin: 6px 0 0;
+    }
+
+    .number-area {
+      min-height: 116px;
+      display: grid;
+      place-items: center;
+      padding: 4px 0 14px;
+    }
+
+    .number-display {
+      width: 100%;
+      text-align: center;
+      font-size: clamp(26px, 6vw, 38px);
+      font-weight: 300;
+      letter-spacing: .5px;
+      word-break: break-all;
+      line-height: 1.15;
+      min-height: 44px;
+    }
+
+    .cursor::after {
+      content: "";
+      display: inline-block;
+      width: 2px;
+      height: 1em;
+      background: rgba(255,255,255,.9);
+      margin-left: 3px;
+      vertical-align: -2px;
+      animation: blink 1s steps(1) infinite;
+    }
+
+    @keyframes blink { 50% { opacity: 0; } }
+
+    .dialpad {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px 18px;
+      margin-top: auto;
+    }
+
+    .key {
+      position: relative;
+      aspect-ratio: 1/1;
+      border: 0;
+      border-radius: 50%;
+      background: var(--key);
+      color: var(--text);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.03);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transition: transform .08s ease, background .12s ease;
+      user-select: none;
+    }
+
+    .key:active,
+    .key.pressed {
+      background: var(--key-active);
+      transform: scale(.97);
+    }
+
+    .digit {
+      font-size: 34px;
+      line-height: 1;
+      font-weight: 400;
+      transform: translateY(2px);
+    }
+
+    .letters {
+      margin-top: 4px;
+      font-size: 11px;
+      line-height: 1;
+      letter-spacing: 1.6px;
+      color: rgba(255,255,255,.86);
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 88px 1fr;
+      align-items: center;
+      gap: 16px;
+      padding: 18px 8px 8px;
+    }
+
+    .ghost {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      justify-self: center;
+      display: grid;
+      place-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .15s ease;
+    }
+
+    .ghost.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .call-btn {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      border: 0;
+      background: var(--green);
+      color: white;
+      box-shadow: var(--shadow);
+      display: grid;
+      place-items: center;
+      justify-self: center;
+      transition: transform .12s ease, filter .12s ease;
+    }
+
+    .call-btn:active { transform: scale(.97); filter: brightness(.96); }
+
+    .home-indicator {
+      width: 134px;
+      height: 5px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.88);
+      margin: 10px auto 0;
+      opacity: .95;
+      flex-shrink: 0;
+    }
+
+    .fab-label {
+      font-size: 12px;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 4px;
+    }
+
+    .modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,.48);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      z-index: 20;
+      backdrop-filter: blur(10px);
+    }
+
+    .modal-backdrop.show { display: flex; }
+
+    .modal {
+      width: min(100%, 320px);
+      background: rgba(28,28,30,.94);
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .modal-body {
+      padding: 18px 18px 14px;
+    }
+
+    .modal-title {
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .modal-text {
+      font-size: 14px;
+      line-height: 1.45;
+      color: rgba(255,255,255,.88);
+      white-space: pre-line;
+      word-break: break-word;
+    }
+
+    .modal-actions {
+      border-top: 1px solid rgba(255,255,255,.08);
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+
+    .modal-btn {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      color: #0a84ff;
+      padding: 14px;
+      font-size: 17px;
+      font-weight: 500;
+    }
+
+    .hint {
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 8px;
+      min-height: 16px;
+    }
+
+    svg { display: block; }
+  </style>
+</head>
+<body>
+  <div class="phone-shell">
+    <div class="status-space" id="statusTime">9:41</div>
+
+    <main class="app">
+      <header class="header">
+        <div class="title">Teclado</div>
+      </header>
+
+      <section class="number-area">
+        <div class="number-display cursor" id="numberDisplay" aria-live="polite"></div>
+      </section>
+
+      <section class="dialpad" id="dialpad"></section>
+
+      <div class="hint" id="hint">Marca *#06# para ver el IMEI</div>
+
+      <div class="actions">
+        <button class="ghost" id="clearBtn" aria-label="Borrar último dígito">
+          <svg width="28" height="22" viewBox="0 0 28 22" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M10 1H25C26.1046 1 27 1.89543 27 3V19C27 20.1046 26.1046 21 25 21H10L1 11L10 1Z" stroke="currentColor" stroke-width="2"/>
+            <path d="M19 7L13 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <path d="M13 7L19 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+
+        <button class="call-btn" id="callBtn" aria-label="Llamar">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M20.01 15.38L16.73 15C15.94 14.91 15.16 15.18 14.58 15.73L12.2 17.99C8.54 16.12 5.54 13.13 3.67 9.46L5.94 7.08C6.5 6.5 6.77 5.72 6.68 4.93L6.3 1.68C6.15 0.42 5.09 -0.53 3.82 -0.53H1.59C0.18 -0.53 -0.99 0.64 -0.91 2.05C-0.3 12.49 8.03 20.81 18.46 21.42C19.87 21.5 21.04 20.34 21.04 18.92V16.69C21.05 15.43 20.1 14.37 18.84 14.22" transform="translate(2 2)" fill="white"/>
+          </svg>
+        </button>
+
+        <div></div>
+      </div>
+
+      <div class="home-indicator"></div>
+    </main>
+
+    <div class="modal-backdrop" id="modalBackdrop" aria-hidden="true">
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal-body">
+          <div class="modal-title" id="modalTitle">IMEI</div>
+          <div class="modal-text" id="modalText"></div>
+        </div>
+        <div class="modal-actions">
+          <button class="modal-btn" id="okBtn">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const keys = [
+      { value: '1', letters: '' },
+      { value: '2', letters: 'ABC' },
+      { value: '3', letters: 'DEF' },
+      { value: '4', letters: 'GHI' },
+      { value: '5', letters: 'JKL' },
+      { value: '6', letters: 'MNO' },
+      { value: '7', letters: 'PQRS' },
+      { value: '8', letters: 'TUV' },
+      { value: '9', letters: 'WXYZ' },
+      { value: '*', letters: '' },
+      { value: '0', letters: '+' },
+      { value: '#', letters: '' }
+    ];
+
+    const display = document.getElementById('numberDisplay');
+    const clearBtn = document.getElementById('clearBtn');
+    const modalBackdrop = document.getElementById('modalBackdrop');
+    const modalText = document.getElementById('modalText');
+    const okBtn = document.getElementById('okBtn');
+    const hint = document.getElementById('hint');
+    const dialpad = document.getElementById('dialpad');
+    const statusTime = document.getElementById('statusTime');
+
+    let typed = '';
+
+    const demoIMEI1 = '356789123456789';
+    const demoIMEI2 = '356789123450123';
+
+    function updateTime() {
+      const now = new Date();
+      statusTime.textContent = now.toLocaleTimeString('es-PE', {
+        hour: 'numeric',
+        minute: '2-digit'
+      });
+    }
+
+    function updateDisplay() {
+      display.textContent = typed;
+      display.classList.toggle('cursor', typed.length === 0);
+      clearBtn.classList.toggle('visible', typed.length > 0);
+      hint.textContent = typed === '*#06#'
+        ? 'Código detectado'
+        : (typed.length ? ' ' : 'Marca *#06# para ver el IMEI');
+    }
+
+    function pressKey(value) {
+      if (typed.length >= 22) return;
+      typed += value;
+      updateDisplay();
+
+      if (typed === '*#06#') {
+        showImei();
+      }
+    }
+
+    function deleteLast() {
+      typed = typed.slice(0, -1);
+      updateDisplay();
+    }
+
+    function resetInput() {
+      typed = '';
+      updateDisplay();
+    }
+
+    function showImei() {
+      modalText.textContent = `IMEI\n${demoIMEI1}\n\nIMEI2\n${demoIMEI2}`;
+      modalBackdrop.classList.add('show');
+      modalBackdrop.setAttribute('aria-hidden', 'false');
+      setTimeout(resetInput, 80);
+    }
+
+    function hideModal() {
+      modalBackdrop.classList.remove('show');
+      modalBackdrop.setAttribute('aria-hidden', 'true');
+    }
+
+    function buildDialpad() {
+      keys.forEach((key) => {
+        const btn = document.createElement('button');
+        btn.className = 'key';
+        btn.setAttribute('type', 'button');
+        btn.setAttribute('aria-label', `Tecla ${key.value}`);
+        btn.innerHTML = `
+          <div class="digit">${key.value}</div>
+          <div class="letters">${key.letters || '&nbsp;'}</div>
+        `;
+        btn.addEventListener('click', () => pressKey(key.value));
+        dialpad.appendChild(btn);
+      });
+    }
+
+    clearBtn.addEventListener('click', deleteLast);
+    clearBtn.addEventListener('contextmenu', (e) => e.preventDefault());
+    okBtn.addEventListener('click', hideModal);
+    modalBackdrop.addEventListener('click', (e) => {
+      if (e.target === modalBackdrop) hideModal();
+    });
+
+    document.getElementById('callBtn').addEventListener('click', () => {
+      if (!typed) return;
+      alert(`Llamando a ${typed}`);
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (/^[0-9*#]$/.test(e.key)) {
+        pressKey(e.key);
+      } else if (e.key === 'Backspace') {
+        deleteLast();
+      } else if (e.key === 'Escape') {
+        hideModal();
+      }
+    });
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      });
+    }
+
+    buildDialpad();
+    updateDisplay();
+    updateTime();
+    setInterval(updateTime, 1000 * 30);
+  </script>
+</body>
+</html>
