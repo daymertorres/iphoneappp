@@ -2,594 +2,189 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
-  <meta name="theme-color" content="#000000" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"
+  />
+  <title>Teléfono</title>
+
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Teléfono" />
-  <meta name="format-detection" content="telephone=no" />
-  <title>Teléfono</title>
+  <meta name="theme-color" content="#000000" />
+
   <link rel="manifest" href="manifest.json" />
   <link rel="apple-touch-icon" href="icons/icon-180.png" />
-  <style>
-    :root {
-      --bg: #000;
-      --text: #fff;
-      --muted: rgba(235,235,245,.6);
-      --ios-blue: #0a84ff;
-      --ios-green: #32d74b;
-      --key: #313135;
-      --key-active: #45454b;
-      --safe-top: env(safe-area-inset-top, 0px);
-      --safe-bottom: env(safe-area-inset-bottom, 0px);
-      --sheet: #1c1c1e;
-      --sheet-line: rgba(255,255,255,.05);
-    }
-
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; }
-    html, body { margin: 0; background: #000; color: #fff; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif; height: 100%; overflow: hidden; }
-    body { display: grid; place-items: center; }
-
-    .phone {
-      position: relative;
-      width: min(100vw, 430px);
-      height: 100dvh;
-      background: #000;
-      overflow: hidden;
-    }
-
-    .screen {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      padding-top: var(--safe-top);
-      background: #000;
-    }
-
-    .statusbar {
-      height: 48px;
-      padding: 0 18px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-weight: 600;
-      letter-spacing: .2px;
-      font-size: 17px;
-    }
-
-    .status-right {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .status-right svg,
-    .status-left svg { display: block; }
-
-    .app {
-      position: absolute;
-      inset: calc(48px + var(--safe-top)) 0 0 0;
-      display: flex;
-      flex-direction: column;
-      padding: 2px 24px 0;
-    }
-
-    .utility-row {
-      height: 34px;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      padding-top: 4px;
-    }
-
-    .utility-icon {
-      width: 32px;
-      height: 32px;
-      display: grid;
-      place-items: center;
-    }
-
-    .typed-number {
-      text-align: center;
-      font-size: 27px;
-      font-weight: 300;
-      letter-spacing: .6px;
-      min-height: 90px;
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      padding-top: 12px;
-    }
-
-    .dialpad {
-      width: 100%;
-      max-width: 342px;
-      margin: 34px auto 0;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px 23px;
-    }
-
-    .key {
-      appearance: none;
-      border: 0;
-      width: 88px;
-      height: 88px;
-      border-radius: 50%;
-      background: var(--key);
-      color: #fff;
-      justify-self: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      transition: transform .09s ease, background .09s ease;
-      padding: 0;
-    }
-    .key:active { transform: scale(.97); background: var(--key-active); }
-
-    .digit {
-      font-size: 31px;
-      line-height: 1;
-      font-weight: 400;
-      margin-top: 3px;
-    }
-
-    .letters {
-      margin-top: 4px;
-      font-size: 11px;
-      line-height: 1;
-      font-weight: 600;
-      letter-spacing: 2.4px;
-      min-height: 11px;
-    }
-
-    .actions {
-      width: 100%;
-      max-width: 342px;
-      margin: 18px auto 0;
-      display: grid;
-      grid-template-columns: 1fr 88px 1fr;
-      align-items: center;
-    }
-
-    .call {
-      width: 88px;
-      height: 88px;
-      border-radius: 50%;
-      border: 0;
-      background: var(--ios-green);
-      display: grid;
-      place-items: center;
-      justify-self: center;
-    }
-
-    .backspace {
-      justify-self: center;
-      width: 34px;
-      height: 34px;
-      display: none;
-      place-items: center;
-      background: transparent;
-      border: 0;
-      color: rgba(255,255,255,.9);
-      padding: 0;
-    }
-    .backspace.show { display: grid; }
-
-    .tabs {
-      margin-top: auto;
-      padding: 10px 2px 0;
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 2px;
-      align-items: end;
-    }
-
-    .tab {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1;
-    }
-    .tab svg { display: block; }
-    .tab.active { color: var(--ios-blue); }
-
-    .home-indicator {
-      width: 134px;
-      height: 5px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.95);
-      margin: 10px auto calc(8px + var(--safe-bottom));
-      flex-shrink: 0;
-    }
-
-    .overlay {
-      position: absolute;
-      inset: 0;
-      display: none;
-      z-index: 30;
-    }
-    .overlay.show { display: block; }
-
-    .overlay-dim {
-      position: absolute;
-      inset: 0;
-      background: rgba(0,0,0,.6);
-    }
-
-    .imei-sheet {
-      position: absolute;
-      left: 10px;
-      right: 10px;
-      top: calc(56px + var(--safe-top));
-      bottom: calc(18px + var(--safe-bottom));
-      background: rgba(28,28,30,.98);
-      border-radius: 18px;
-      box-shadow: 0 22px 50px rgba(0,0,0,.45);
-      overflow: hidden;
-    }
-
-    .imei-sheet::before {
-      content: "";
-      position: absolute;
-      top: -16px;
-      left: 18px;
-      right: 18px;
-      height: 20px;
-      border-radius: 18px 18px 0 0;
-      background: rgba(28,28,30,.5);
-      filter: blur(1px);
-    }
-
-    .sheet-header {
-      padding: 14px 14px 0;
-      position: relative;
-      z-index: 1;
-    }
-
-    .cancel {
-      appearance: none;
-      border: 0;
-      background: transparent;
-      color: var(--ios-blue);
-      font-size: 18px;
-      padding: 0;
-      font-weight: 400;
-    }
-
-    .sheet-scroll {
-      height: calc(100% - 38px);
-      overflow: auto;
-      padding: 18px 26px 90px;
-      text-align: center;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    .sheet-title {
-      font-size: 38px;
-      line-height: 1.1;
-      font-weight: 700;
-      letter-spacing: -.9px;
-      margin: 10px 0 34px;
-    }
-
-    .label {
-      font-size: 18px;
-      color: rgba(255,255,255,.9);
-      margin-bottom: 6px;
-    }
-
-    .value {
-      font-size: 23px;
-      line-height: 1.2;
-      font-weight: 400;
-      margin-bottom: 22px;
-      word-break: break-all;
-    }
-
-    .value.small { font-size: 21px; }
-
-    .barcode-box {
-      width: 100%;
-      background: #fff;
-      padding: 14px 10px;
-      margin: 0 auto 34px;
-    }
-
-    .barcode-box svg {
-      width: 100%;
-      height: 54px;
-      background: #fff;
-      display: block;
-    }
-
-    .imei-group { margin-top: 6px; }
-
-    @media (max-width: 380px) {
-      .dialpad { gap: 14px 18px; max-width: 320px; }
-      .key { width: 82px; height: 82px; }
-      .actions, .dialpad { max-width: 320px; }
-      .tabs { font-size: 11px; }
-      .sheet-title { font-size: 34px; }
-      .value { font-size: 20px; }
-    }
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="phone">
+  <div class="app">
     <div class="screen">
-      <div class="statusbar">
-        <div class="status-left" id="statusTime">2:35</div>
-        <div class="status-right">
-          <svg width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <rect x="0" y="6" width="3" height="6" rx="1" fill="white" opacity=".65"/>
-            <rect x="5" y="4" width="3" height="8" rx="1" fill="white" opacity=".75"/>
-            <rect x="10" y="2" width="3" height="10" rx="1" fill="white" opacity=".85"/>
-            <rect x="15" y="0" width="3" height="12" rx="1" fill="white"/>
-          </svg>
-          <svg width="18" height="14" viewBox="0 0 18 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <path d="M1 5.5C5-0.2 13-0.2 17 5.5" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
-            <path d="M4 8.5C6.8 5.2 11.2 5.2 14 8.5" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
-            <circle cx="9" cy="11" r="1.4" fill="white"/>
-          </svg>
-          <svg width="31" height="15" viewBox="0 0 31 15" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <rect x="0.75" y="0.75" width="26.5" height="13.5" rx="4.25" stroke="white" stroke-width="1.5"/>
-            <rect x="2.8" y="2.8" width="20.8" height="9.4" rx="2.4" fill="white"/>
-            <rect x="27.9" y="4.7" width="2.3" height="5.6" rx="1.1" fill="white" opacity=".9"/>
-            <text x="13.2" y="10.6" text-anchor="middle" font-size="8.5" font-family="-apple-system, BlinkMacSystemFont, sans-serif" fill="black" font-weight="700">80</text>
-          </svg>
-        </div>
-      </div>
-
-      <main class="app">
-        <div class="utility-row">
-          <div class="utility-icon" aria-hidden="true">
-            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="1.5" y="1.5" width="16.5" height="16.5" rx="4" fill="#0A84FF"/>
-              <path d="M9.2 6.4H6.4V13.8H8.2V11.3H9.1C11.1 11.3 12.4 10.3 12.4 8.8C12.4 7.2 11.2 6.4 9.2 6.4Z" fill="white"/>
-              <path d="M8.8 9.9H8.2V7.8H8.8C9.7 7.8 10.4 8.1 10.4 8.8C10.4 9.5 9.8 9.9 8.8 9.9Z" fill="#0A84FF"/>
-              <path d="M22 7L25 10" stroke="white" stroke-width="1.7" stroke-linecap="round"/>
-              <path d="M19 10L22 7" stroke="white" stroke-width="1.7" stroke-linecap="round"/>
-              <path d="M19 15L22 18" stroke="white" stroke-width="1.7" stroke-linecap="round"/>
-              <path d="M22 18L25 15" stroke="white" stroke-width="1.7" stroke-linecap="round"/>
-            </svg>
-          </div>
-          <div class="utility-icon" aria-hidden="true">
-            <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M27.3 17.2C27.3 23 22.6 27.7 16.8 27.7C11 27.7 6.3 23 6.3 17.2C6.3 11.4 11 6.7 16.8 6.7C20.4 6.7 23.7 8.5 25.6 11.3" stroke="#0A84FF" stroke-width="2.5" stroke-linecap="round"/>
-              <path d="M26.4 5.9V11.8H20.5" stroke="#0A84FF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-              <circle cx="24.4" cy="24.8" r="5.1" stroke="#0A84FF" stroke-width="2.5"/>
-              <path d="M24.4 22.1V27.5" stroke="#0A84FF" stroke-width="2.5" stroke-linecap="round"/>
-              <path d="M21.7 24.8H27.1" stroke="#0A84FF" stroke-width="2.5" stroke-linecap="round"/>
-            </svg>
+      <header class="topbar">
+        <div class="top-left">
+          <div class="carrier-badge">P</div>
+          <div class="carrier-arrows">
+            <span>⌃</span>
+            <span>⌄</span>
           </div>
         </div>
 
-        <div class="typed-number" id="display"></div>
+        <div class="top-right">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              d="M18 14c1.66 0 3 1.34 3 3v3h-2v-2.17a3.001 3.001 0 0 0-2.83-2.99L16 14h2zm-8 0c2.76 0 5 2.24 5 5v1H5v-1c0-2.76 2.24-5 5-5zm0 2c-1.67 0-3 1.33-3 3h6c0-1.67-1.33-3-3-3zm6-14c2.21 0 4 1.79 4 4s-1.79 4-4 4-4-1.79-4-4 1.79-4 4-4zm0 2a2 2 0 1 0 0 4 2 2 0 0 0 0-4zM8 3c2.21 0 4 1.79 4 4S10.21 11 8 11 4 9.21 4 7s1.79-4 4-4zm0 2a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"
+            />
+            <circle cx="19" cy="18" r="4.25" fill="none" stroke="currentColor" stroke-width="1.8"/>
+            <path d="M19 16.7v2.6M17.7 18h2.6" stroke="#000" stroke-width="0"/>
+          </svg>
+        </div>
+      </header>
 
-        <section class="dialpad" id="dialpad"></section>
+      <main class="dialer-area">
+        <div id="display" class="display"> </div>
 
-        <div class="actions">
-          <div></div>
-          <button class="call" type="button" aria-label="Llamar" id="callBtn">
-            <svg width="38" height="38" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <path d="M20.01 15.38L16.73 15C15.94 14.91 15.16 15.18 14.58 15.73L12.2 17.99C8.54 16.12 5.54 13.13 3.67 9.46L5.94 7.08C6.5 6.5 6.77 5.72 6.68 4.93L6.3 1.68C6.15 0.42 5.09 -0.53 3.82 -0.53H1.59C0.18 -0.53 -0.99 0.64 -0.91 2.05C-0.3 12.49 8.03 20.81 18.46 21.42C19.87 21.5 21.04 20.34 21.04 18.92V16.69C21.05 15.43 20.1 14.37 18.84 14.22" transform="translate(2 2)" fill="white"/>
+        <div class="keypad">
+          <button class="key" data-value="1">
+            <span class="digit">1</span>
+          </button>
+
+          <button class="key" data-value="2">
+            <span class="digit">2</span>
+            <span class="letters">ABC</span>
+          </button>
+
+          <button class="key" data-value="3">
+            <span class="digit">3</span>
+            <span class="letters">DEF</span>
+          </button>
+
+          <button class="key" data-value="4">
+            <span class="digit">4</span>
+            <span class="letters">GHI</span>
+          </button>
+
+          <button class="key" data-value="5">
+            <span class="digit">5</span>
+            <span class="letters">JKL</span>
+          </button>
+
+          <button class="key" data-value="6">
+            <span class="digit">6</span>
+            <span class="letters">MNO</span>
+          </button>
+
+          <button class="key" data-value="7">
+            <span class="digit">7</span>
+            <span class="letters">PQRS</span>
+          </button>
+
+          <button class="key" data-value="8">
+            <span class="digit">8</span>
+            <span class="letters">TUV</span>
+          </button>
+
+          <button class="key" data-value="9">
+            <span class="digit">9</span>
+            <span class="letters">WXYZ</span>
+          </button>
+
+          <button class="key" data-value="*">
+            <span class="digit">*</span>
+          </button>
+
+          <button class="key" data-value="0">
+            <span class="digit">0</span>
+            <span class="letters plus">+</span>
+          </button>
+
+          <button class="key" data-value="#">
+            <span class="digit">#</span>
+          </button>
+        </div>
+
+        <div class="actions-row">
+          <div class="actions-spacer"></div>
+
+          <button id="callBtn" class="call-btn" aria-label="Llamar">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M20.52 15.38c-1.23 0-2.42-.2-3.53-.57a1 1 0 0 0-1 .24l-2.2 2.2a15.06 15.06 0 0 1-6.04-6.04l2.2-2.2a1 1 0 0 0 .24-1 11.2 11.2 0 0 1-.57-3.53A1.5 1.5 0 0 0 8.12 3H4.5A1.5 1.5 0 0 0 3 4.5C3 14.17 10.83 22 20.5 22a1.5 1.5 0 0 0 1.5-1.5v-3.62a1.5 1.5 0 0 0-1.48-1.5z"
+              />
             </svg>
           </button>
-          <button class="backspace" id="backspace" type="button" aria-label="Borrar">
-            <svg width="36" height="26" viewBox="0 0 36 26" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <path d="M12.5 3H30C31.6569 3 33 4.34315 33 6V20C33 21.6569 31.6569 23 30 23H12.5L3 13L12.5 3Z" fill="#2C2C2E"/>
-              <path d="M23 9L17 17" stroke="white" stroke-width="2.3" stroke-linecap="round"/>
-              <path d="M17 9L23 17" stroke="white" stroke-width="2.3" stroke-linecap="round"/>
+
+          <button id="deleteBtn" class="delete-btn" aria-label="Borrar">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M9.2 5h6.18a2 2 0 0 1 1.41.59l4.62 4.62a1 1 0 0 1 0 1.41l-4.62 4.62a2 2 0 0 1-1.41.59H9.2a2 2 0 0 1-1.41-.59L2.17 10.62a1 1 0 0 1 0-1.41L7.79 5.59A2 2 0 0 1 9.2 5z"/>
+              <path d="M10 8l5 5M15 8l-5 5" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
             </svg>
           </button>
         </div>
-
-        <nav class="tabs" aria-label="Navegación inferior">
-          <div class="tab">
-            <svg width="31" height="31" viewBox="0 0 31 31" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M15.5 3L19.3 11L28.2 12.1L21.7 18.2L23.4 27L15.5 22.8L7.6 27L9.3 18.2L2.8 12.1L11.7 11L15.5 3Z"/></svg>
-            <span>Favoritos</span>
-          </div>
-          <div class="tab">
-            <svg width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="15.5" cy="15.5" r="11" stroke="currentColor" stroke-width="2.8"/><path d="M15.5 9V15.8L20.5 18.9" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <span>Recientes</span>
-          </div>
-          <div class="tab">
-            <svg width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="15.5" cy="12" r="6.4" fill="currentColor"/><path d="M5.6 25.8C6.9 21.3 10.8 18.7 15.5 18.7C20.2 18.7 24.1 21.3 25.4 25.8" fill="currentColor"/></svg>
-            <span>Contactos</span>
-          </div>
-          <div class="tab active">
-            <svg width="31" height="31" viewBox="0 0 31 31" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><circle cx="7" cy="7" r="3"/><circle cx="15.5" cy="7" r="3"/><circle cx="24" cy="7" r="3"/><circle cx="7" cy="15.5" r="3"/><circle cx="15.5" cy="15.5" r="3"/><circle cx="24" cy="15.5" r="3"/><circle cx="7" cy="24" r="3"/><circle cx="15.5" cy="24" r="3"/><circle cx="24" cy="24" r="3"/></svg>
-            <span>Teclado</span>
-          </div>
-          <div class="tab">
-            <svg width="40" height="31" viewBox="0 0 40 31" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="12" width="16" height="9" rx="4.5" stroke="currentColor" stroke-width="2.4"/><rect x="22" y="12" width="16" height="9" rx="4.5" stroke="currentColor" stroke-width="2.4"/><path d="M18 16.5H22" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
-            <span>Buzón de voz</span>
-          </div>
-        </nav>
-
-        <div class="home-indicator"></div>
       </main>
 
-      <div class="overlay" id="imeiOverlay" aria-hidden="true">
-        <div class="overlay-dim"></div>
-        <section class="imei-sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
-          <div class="sheet-header">
-            <button class="cancel" id="cancelBtn" type="button">Cancelar</button>
-          </div>
-          <div class="sheet-scroll">
-            <div class="sheet-title" id="sheetTitle">Información</div>
+      <nav class="bottom-tabs">
+        <button class="tab">
+          <span class="tab-icon">★</span>
+          <span class="tab-label">Favoritos</span>
+        </button>
 
-            <div class="label">EID</div>
-            <div class="value small" id="eidValue"></div>
-            <div class="barcode-box"><svg id="eidBarcode" viewBox="0 0 320 54" preserveAspectRatio="none"></svg></div>
+        <button class="tab">
+          <span class="tab-icon">◔</span>
+          <span class="tab-label">Recientes</span>
+        </button>
 
-            <div class="imei-group">
-              <div class="label" id="imei1Label"></div>
-              <div class="value" id="imei1Value"></div>
-              <div class="barcode-box"><svg id="imei1Barcode" viewBox="0 0 320 54" preserveAspectRatio="none"></svg></div>
-            </div>
+        <button class="tab">
+          <span class="tab-icon">◉</span>
+          <span class="tab-label">Contactos</span>
+        </button>
 
-            <div class="imei-group">
-              <div class="label" id="imei2Label"></div>
-              <div class="value" id="imei2Value"></div>
-              <div class="barcode-box"><svg id="imei2Barcode" viewBox="0 0 320 54" preserveAspectRatio="none"></svg></div>
-            </div>
-          </div>
-        </section>
-      </div>
+        <button class="tab active">
+          <span class="tab-grid" aria-hidden="true">
+            <i></i><i></i><i></i>
+            <i></i><i></i><i></i>
+            <i></i><i></i><i></i>
+          </span>
+          <span class="tab-label">Teclado</span>
+        </button>
+
+        <button class="tab">
+          <span class="tab-icon voicemail">◉◉</span>
+          <span class="tab-label">Buzón de voz</span>
+        </button>
+      </nav>
+
+      <div class="home-indicator"></div>
     </div>
   </div>
 
-  <script>
-    const display = document.getElementById('display');
-    const dialpad = document.getElementById('dialpad');
-    const backspace = document.getElementById('backspace');
-    const imeiOverlay = document.getElementById('imeiOverlay');
-    const cancelBtn = document.getElementById('cancelBtn');
-    const statusTime = document.getElementById('statusTime');
+  <div id="infoOverlay" class="overlay hidden">
+    <div class="info-sheet">
+      <button id="closeInfoBtn" class="cancel-btn">Cancelar</button>
 
-    const deviceInfo = {
-      eid: '89049032007208882600188086421161',
-      imei1: '359626458246633',
-      imei2: '359626458239075'
-    };
+      <div class="info-content">
+        <h1>Información</h1>
 
-    const keys = [
-      ['1', ''], ['2', 'ABC'], ['3', 'DEF'],
-      ['4', 'GHI'], ['5', 'JKL'], ['6', 'MNO'],
-      ['7', 'PQRS'], ['8', 'TUV'], ['9', 'WXYZ'],
-      ['*', ''], ['0', '+'], ['#', '']
-    ];
+        <div class="info-block">
+          <div class="info-label">EID</div>
+          <div id="eidValue" class="info-value eid"></div>
+          <div id="eidBarcode" class="barcode-box"></div>
+        </div>
 
-    let typed = '';
+        <div class="info-block">
+          <div id="imei1Value" class="info-value imei-line"></div>
+          <div id="imei1Barcode" class="barcode-box"></div>
+        </div>
 
-    function updateTime() {
-      const now = new Date();
-      statusTime.textContent = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
-    }
+        <div class="info-block">
+          <div id="imei2Value" class="info-value imei-line"></div>
+          <div id="imei2Barcode" class="barcode-box"></div>
+        </div>
+      </div>
 
-    function renderDisplay() {
-      display.textContent = typed;
-      backspace.classList.toggle('show', typed.length > 0);
-    }
+      <div class="sheet-home-indicator"></div>
+    </div>
+  </div>
 
-    function addChar(char) {
-      if (typed.length >= 24 || imeiOverlay.classList.contains('show')) return;
-      typed += char;
-      renderDisplay();
-      if (typed === '*#06#') {
-        setTimeout(openImeiSheet, 110);
-      }
-    }
-
-    function removeChar() {
-      typed = typed.slice(0, -1);
-      renderDisplay();
-    }
-
-    function resetInput() {
-      typed = '';
-      renderDisplay();
-    }
-
-    function drawFakeBarcode(svg, value) {
-      const bars = [];
-      let x = 8;
-      const height = 46;
-      const seed = Array.from(value).map((c, i) => (c.charCodeAt(0) + i) % 4);
-
-      bars.push(`<rect x="${x}" y="2" width="2" height="${height}" fill="black"/>`);
-      x += 4;
-      bars.push(`<rect x="${x}" y="2" width="1" height="${height}" fill="black"/>`);
-      x += 3;
-      bars.push(`<rect x="${x}" y="2" width="2" height="${height}" fill="black"/>`);
-      x += 5;
-
-      seed.forEach((n, i) => {
-        const pattern = [1, 2, 1 + (n % 2), 3, 2, 1, 2 + ((i + n) % 2)];
-        pattern.forEach((w, idx) => {
-          if (idx % 2 === 0) {
-            bars.push(`<rect x="${x}" y="2" width="${w}" height="${height}" fill="black"/>`);
-          }
-          x += w + (idx % 2 === 0 ? 1 : 0);
-        });
-        x += 2 + (n % 2);
-      });
-
-      bars.push(`<rect x="${x}" y="2" width="2" height="${height}" fill="black"/>`);
-      x += 4;
-      bars.push(`<rect x="${x}" y="2" width="1" height="${height}" fill="black"/>`);
-      x += 3;
-      bars.push(`<rect x="${x}" y="2" width="2" height="${height}" fill="black"/>`);
-
-      svg.innerHTML = `<rect x="0" y="0" width="320" height="54" fill="white"/>${bars.join('')}`;
-    }
-
-    function fillSheet() {
-      document.getElementById('eidValue').textContent = deviceInfo.eid;
-      document.getElementById('imei1Label').textContent = `IMEI ${deviceInfo.imei1}`;
-      document.getElementById('imei1Value').textContent = '';
-      document.getElementById('imei2Label').textContent = `IMEI2 ${deviceInfo.imei2}`;
-      document.getElementById('imei2Value').textContent = '';
-
-      drawFakeBarcode(document.getElementById('eidBarcode'), deviceInfo.eid);
-      drawFakeBarcode(document.getElementById('imei1Barcode'), deviceInfo.imei1);
-      drawFakeBarcode(document.getElementById('imei2Barcode'), deviceInfo.imei2);
-    }
-
-    function openImeiSheet() {
-      fillSheet();
-      imeiOverlay.classList.add('show');
-      imeiOverlay.setAttribute('aria-hidden', 'false');
-      resetInput();
-    }
-
-    function closeImeiSheet() {
-      imeiOverlay.classList.remove('show');
-      imeiOverlay.setAttribute('aria-hidden', 'true');
-    }
-
-    function buildPad() {
-      keys.forEach(([value, letters]) => {
-        const button = document.createElement('button');
-        button.className = 'key';
-        button.type = 'button';
-        button.innerHTML = `<div class="digit">${value}</div><div class="letters">${letters || '&nbsp;'}</div>`;
-        button.addEventListener('click', () => addChar(value));
-        dialpad.appendChild(button);
-      });
-    }
-
-    backspace.addEventListener('click', removeChar);
-    cancelBtn.addEventListener('click', closeImeiSheet);
-    imeiOverlay.addEventListener('click', (e) => {
-      if (e.target.classList.contains('overlay-dim')) closeImeiSheet();
-    });
-
-    document.getElementById('callBtn').addEventListener('click', () => {
-      if (!typed) return;
-      alert(`Llamando a ${typed}`);
-    });
-
-    document.addEventListener('keydown', (e) => {
-      if (/^[0-9*#]$/.test(e.key)) addChar(e.key);
-      else if (e.key === 'Backspace') removeChar();
-      else if (e.key === 'Escape') closeImeiSheet();
-    });
-
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
-    }
-
-    buildPad();
-    renderDisplay();
-    updateTime();
-    setInterval(updateTime, 30000);
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
