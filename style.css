@@ -253,7 +253,7 @@ button {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   align-items: end;
-  padding-bottom: 50px;
+  padding-bottom: 2px;
   margin-top: auto;
 }
 
