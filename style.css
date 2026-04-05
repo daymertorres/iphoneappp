@@ -119,18 +119,19 @@ button {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 6px;
+  padding-top: 40px;
 }
 
 .display {
   width: 100%;
-  min-height: 78px;
+  min-height: 86px;
   text-align: center;
   font-size: 36px;
   line-height: 1.1;
   font-weight: 300;
   letter-spacing: 0;
-  padding-top: 22px;
+  padding-top: 30px;
+  margin-bottom: 6px;
   color: #fff;
   white-space: nowrap;
   overflow: hidden;
@@ -139,13 +140,13 @@ button {
 
 .keypad {
   width: 100%;
-  max-width: 360px;
+  max-width: 332px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  column-gap: 6px;
+  column-gap: 0px;
   row-gap: 13px;
   justify-items: center;
-  margin-top: 4px;
+  margin-top: 0;
 }
 
 .key {
@@ -418,13 +419,13 @@ button {
   }
 
   .keypad {
-    max-width: 348px;
-    column-gap: 4px;
+    max-width: 324px;
+    column-gap: 0;
     row-gap: 12px;
   }
 
   .actions-row {
-    max-width: 348px;
+    max-width: 324px;
     grid-template-columns: 1fr 78px 1fr;
   }
 }
