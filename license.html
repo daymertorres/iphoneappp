@@ -20,26 +20,65 @@
         Ingresa tu licencia. Esta activación quedará vinculada a este dispositivo.
       </p>
 
-      <form id="licenseForm" novalidate>
-        <input
-          id="licenseInput"
-          class="license-input"
-          type="text"
-          inputmode="text"
-          enterkeyhint="done"
-          placeholder="XXXX-XXXX-XXXX-XXXX"
-          autocomplete="off"
-          autocapitalize="characters"
-          autocorrect="off"
-          spellcheck="false"
-        />
+      <div id="licenseDisplay" class="license-display">----</div>
 
-        <button id="activateBtn" class="activate-btn" type="submit">
-          Activar
-        </button>
+      <div class="license-keyboard">
+        <button class="license-key" data-value="A">A</button>
+        <button class="license-key" data-value="B">B</button>
+        <button class="license-key" data-value="C">C</button>
+        <button class="license-key" data-value="D">D</button>
 
-        <p id="licenseMsg" class="license-msg"></p>
-      </form>
+        <button class="license-key" data-value="E">E</button>
+        <button class="license-key" data-value="F">F</button>
+        <button class="license-key" data-value="G">G</button>
+        <button class="license-key" data-value="H">H</button>
+
+        <button class="license-key" data-value="I">I</button>
+        <button class="license-key" data-value="J">J</button>
+        <button class="license-key" data-value="K">K</button>
+        <button class="license-key" data-value="L">L</button>
+
+        <button class="license-key" data-value="M">M</button>
+        <button class="license-key" data-value="N">N</button>
+        <button class="license-key" data-value="O">O</button>
+        <button class="license-key" data-value="P">P</button>
+
+        <button class="license-key" data-value="Q">Q</button>
+        <button class="license-key" data-value="R">R</button>
+        <button class="license-key" data-value="S">S</button>
+        <button class="license-key" data-value="T">T</button>
+
+        <button class="license-key" data-value="U">U</button>
+        <button class="license-key" data-value="V">V</button>
+        <button class="license-key" data-value="W">W</button>
+        <button class="license-key" data-value="X">X</button>
+
+        <button class="license-key" data-value="Y">Y</button>
+        <button class="license-key" data-value="Z">Z</button>
+        <button class="license-key" data-value="1">1</button>
+        <button class="license-key" data-value="2">2</button>
+
+        <button class="license-key" data-value="3">3</button>
+        <button class="license-key" data-value="4">4</button>
+        <button class="license-key" data-value="5">5</button>
+        <button class="license-key" data-value="6">6</button>
+
+        <button class="license-key" data-value="7">7</button>
+        <button class="license-key" data-value="8">8</button>
+        <button class="license-key" data-value="9">9</button>
+        <button class="license-key" data-value="0">0</button>
+      </div>
+
+      <div class="license-actions">
+        <button id="deleteBtn" class="secondary-btn" type="button">Borrar</button>
+        <button id="clearBtn" class="secondary-btn" type="button">Limpiar</button>
+      </div>
+
+      <button id="activateBtn" class="activate-btn" type="button">
+        Activar
+      </button>
+
+      <p id="licenseMsg" class="license-msg"></p>
     </div>
   </main>
 
