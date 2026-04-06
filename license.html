@@ -20,24 +20,31 @@
         Ingresa tu licencia. Esta activación quedará vinculada a este dispositivo.
       </p>
 
-      <input
-        id="licenseInput"
-        class="license-input"
-        type="search"
-        inputmode="text"
-        enterkeyhint="done"
-        placeholder="XXXX-XXXX-XXXX-XXXX"
-        autocomplete="off"
-        autocapitalize="characters"
-        autocorrect="off"
-        spellcheck="false"
-      />
+      <form id="licenseForm" novalidate>
+        <input
+          id="licenseInput"
+          class="license-input"
+          type="text"
+          inputmode="text"
+          enterkeyhint="done"
+          placeholder="XXXX-XXXX-XXXX-XXXX"
+          autocomplete="off"
+          autocapitalize="characters"
+          autocorrect="off"
+          spellcheck="false"
+          readonly
+        />
 
-      <button id="activateBtn" class="activate-btn" type="button">
-        Activar
-      </button>
+        <button id="focusBtn" class="focus-btn" type="button">
+          Escribir licencia
+        </button>
 
-      <p id="licenseMsg" class="license-msg"></p>
+        <button id="activateBtn" class="activate-btn" type="submit">
+          Activar
+        </button>
+
+        <p id="licenseMsg" class="license-msg"></p>
+      </form>
     </div>
   </main>
 
