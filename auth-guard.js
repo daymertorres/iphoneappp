@@ -1,8 +1,9 @@
 (async function () {
-  const PUBLIC_PAGES = ["/license.html"];
-
   const currentPath = window.location.pathname;
-  if (PUBLIC_PAGES.includes(currentPath)) return;
+
+  if (currentPath.endsWith("/license.html")) {
+    return;
+  }
 
   const licenseKey = localStorage.getItem("license_key");
   const deviceId = localStorage.getItem("device_id");
@@ -28,6 +29,7 @@
       window.location.replace("/license.html");
     }
   } catch (error) {
+    console.error("AUTH GUARD ERROR:", error);
     localStorage.removeItem("license_key");
     localStorage.removeItem("license_activated");
     window.location.replace("/license.html");
