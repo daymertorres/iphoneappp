@@ -9,13 +9,11 @@ function getOrCreateDeviceId() {
   return deviceId;
 }
 
+const form = document.getElementById("licenseForm");
 const input = document.getElementById("licenseInput");
+const focusBtn = document.getElementById("focusBtn");
 const btn = document.getElementById("activateBtn");
 const msg = document.getElementById("licenseMsg");
-
-function isStandaloneMode() {
-  return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
-}
 
 async function checkExistingAccess() {
   const licenseKey = localStorage.getItem("license_key");
@@ -45,50 +43,60 @@ async function checkExistingAccess() {
   }
 }
 
+function unlockInputAndFocus() {
+  input.readOnly = false;
+
+  // Importante: esto debe ejecutarse por toque/click del usuario
+  input.focus();
+  input.click();
+
+  const end = input.value.length;
+  try {
+    input.setSelectionRange(end, end);
+  } catch (error) {
+    // Algunos navegadores no lo permiten en ciertos estados
+  }
+}
+
 function setupIOSInputFix() {
-  if (!input) return;
+  // El input inicia readonly para evitar bugs de enfoque en iPhone PWA.
+  // Al tocarlo o tocar el botón, lo desbloqueamos y enfocamos manualmente.
 
-  const forceFocus = () => {
-    setTimeout(() => {
-      input.focus();
-      input.click();
-      const end = input.value.length;
-      try {
-        input.setSelectionRange(end, end);
-      } catch (e) {}
-    }, 60);
-  };
+  focusBtn.addEventListener("touchend", (e) => {
+    e.preventDefault();
+    unlockInputAndFocus();
+  });
 
-  input.addEventListener("touchstart", forceFocus);
-  input.addEventListener("touchend", forceFocus);
-  input.addEventListener("click", forceFocus);
+  focusBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    unlockInputAndFocus();
+  });
 
+  input.addEventListener("touchend", (e) => {
+    e.preventDefault();
+    unlockInputAndFocus();
+  });
+
+  input.addEventListener("click", () => {
+    unlockInputAndFocus();
+  });
+
+  // Si la página vuelve desde caché del navegador/PWA
   window.addEventListener("pageshow", () => {
     setTimeout(() => {
       input.blur();
-    }, 50);
+    }, 30);
   });
 }
 
 function normalizeLicenseValue(value) {
-  return value.toUpperCase().trim();
-}
-
-function blockActivationOutsideStandalone() {
-  if (isStandaloneMode()) return false;
-
-  input.disabled = true;
-  btn.disabled = true;
-  msg.textContent = "Primero añade la app a pantalla de inicio y ábrela desde ahí para activar la licencia.";
-  return true;
+  return value
+    .toUpperCase()
+    .replace(/\s+/g, "")
+    .trim();
 }
 
 async function activateLicense() {
-  if (!isStandaloneMode()) {
-    msg.textContent = "Abre esta app desde la pantalla de inicio para activar la licencia.";
-    return;
-  }
-
   const licenseKey = normalizeLicenseValue(input.value);
   const deviceId = getOrCreateDeviceId();
 
@@ -100,6 +108,7 @@ async function activateLicense() {
   }
 
   btn.disabled = true;
+  focusBtn.disabled = true;
   btn.textContent = "Activando...";
 
   try {
@@ -128,6 +137,7 @@ async function activateLicense() {
     msg.textContent = "Error de conexión. Intenta otra vez.";
   } finally {
     btn.disabled = false;
+    focusBtn.disabled = false;
     btn.textContent = "Activar";
   }
 }
@@ -135,18 +145,18 @@ async function activateLicense() {
 checkExistingAccess();
 setupIOSInputFix();
 
-const blocked = blockActivationOutsideStandalone();
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  activateLicense();
+});
 
-if (!blocked) {
-  btn.addEventListener("click", activateLicense);
+input.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    activateLicense();
+  }
+});
 
-  input.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-      activateLicense();
-    }
-  });
-
-  input.addEventListener("input", () => {
-    input.value = input.value.toUpperCase();
-  });
-}
+input.addEventListener("input", () => {
+  input.value = input.value.toUpperCase();
+});
