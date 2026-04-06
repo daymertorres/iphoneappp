@@ -98,3 +98,11 @@ h1 {
 .activate-btn:disabled {
   opacity: 0.7;
 }
+
+.license-input {
+  -webkit-appearance: none;
+  appearance: none;
+  user-select: text;
+  -webkit-user-select: text;
+  pointer-events: auto;
+}
