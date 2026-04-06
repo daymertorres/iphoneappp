@@ -18,6 +18,7 @@ body {
   display: grid;
   place-items: center;
   padding: 20px 16px;
+  touch-action: manipulation;
 }
 
 button {
@@ -58,44 +59,47 @@ h1 {
 
 .license-display {
   width: 100%;
-  min-height: 58px;
-  border-radius: 14px;
+  min-height: 60px;
+  border-radius: 16px;
+  background: #1c1c1e;
   border: 1px solid #2a2c31;
-  background: #1a1b1f;
   color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 10px 14px;
-  margin-bottom: 16px;
-  font-size: 20px;
+  margin-bottom: 18px;
+  font-size: 22px;
   font-weight: 600;
-  letter-spacing: 1.5px;
+  letter-spacing: 2px;
   text-align: center;
   word-break: break-all;
 }
 
 .license-keyboard {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-  margin-bottom: 14px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin: 20px 0 14px;
 }
 
 .license-key {
-  height: 48px;
-  border-radius: 14px;
-  background: #1a1b1f;
+  height: 60px;
+  border-radius: 18px;
+  background: #1c1c1e;
   border: 1px solid #2a2c31;
   color: #fff;
-  font-size: 18px;
+  font-size: 22px;
   font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.08s ease, background 0.08s ease;
 }
 
-.license-key:active,
-.secondary-btn:active,
-.activate-btn:active {
-  transform: scale(0.98);
+.license-key:active {
+  transform: scale(0.92);
+  background: #2c2c2e;
 }
 
 .license-actions {
@@ -113,6 +117,11 @@ h1 {
   color: #fff;
   font-size: 16px;
   font-weight: 500;
+}
+
+.secondary-btn:active,
+.activate-btn:active {
+  transform: scale(0.98);
 }
 
 .activate-btn {
