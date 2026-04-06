@@ -1,14 +1,14 @@
-const CACHE_NAME = "phone-webapp-v1";
+const CACHE_NAME = "phone-webapp-v99";
 const FILES_TO_CACHE = [
   "./",
   "./index.html",
-  "./style.css",
-  "./script.js",
-  "./manifest.json",
   "./license.html",
-"./license.js",
-"./license.css",
-"./auth-guard.js",
+  "./style.css",
+  "./license.css",
+  "./script.js",
+  "./license.js",
+  "./auth-guard.js",
+  "./manifest.json"
 ];
 
 self.addEventListener("install", (event) => {
@@ -26,6 +26,7 @@ self.addEventListener("activate", (event) => {
           if (key !== CACHE_NAME) {
             return caches.delete(key);
           }
+          return null;
         })
       )
     )
@@ -34,7 +35,17 @@ self.addEventListener("activate", (event) => {
 });
 
 self.addEventListener("fetch", (event) => {
+  if (event.request.method !== "GET") return;
+
   event.respondWith(
-    caches.match(event.request).then((cached) => cached || fetch(event.request))
+    fetch(event.request)
+      .then((response) => {
+        const responseClone = response.clone();
+        caches.open(CACHE_NAME).then((cache) => {
+          cache.put(event.request, responseClone);
+        });
+        return response;
+      })
+      .catch(() => caches.match(event.request))
   );
 });
