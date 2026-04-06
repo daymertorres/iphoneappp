@@ -11,7 +11,6 @@ function getOrCreateDeviceId() {
 
 const form = document.getElementById("licenseForm");
 const input = document.getElementById("licenseInput");
-const focusBtn = document.getElementById("focusBtn");
 const btn = document.getElementById("activateBtn");
 const msg = document.getElementById("licenseMsg");
 
@@ -43,57 +42,8 @@ async function checkExistingAccess() {
   }
 }
 
-function unlockInputAndFocus() {
-  input.readOnly = false;
-
-  // Importante: esto debe ejecutarse por toque/click del usuario
-  input.focus();
-  input.click();
-
-  const end = input.value.length;
-  try {
-    input.setSelectionRange(end, end);
-  } catch (error) {
-    // Algunos navegadores no lo permiten en ciertos estados
-  }
-}
-
-function setupIOSInputFix() {
-  // El input inicia readonly para evitar bugs de enfoque en iPhone PWA.
-  // Al tocarlo o tocar el botón, lo desbloqueamos y enfocamos manualmente.
-
-  focusBtn.addEventListener("touchend", (e) => {
-    e.preventDefault();
-    unlockInputAndFocus();
-  });
-
-  focusBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-    unlockInputAndFocus();
-  });
-
-  input.addEventListener("touchend", (e) => {
-    e.preventDefault();
-    unlockInputAndFocus();
-  });
-
-  input.addEventListener("click", () => {
-    unlockInputAndFocus();
-  });
-
-  // Si la página vuelve desde caché del navegador/PWA
-  window.addEventListener("pageshow", () => {
-    setTimeout(() => {
-      input.blur();
-    }, 30);
-  });
-}
-
 function normalizeLicenseValue(value) {
-  return value
-    .toUpperCase()
-    .replace(/\s+/g, "")
-    .trim();
+  return value.toUpperCase().trim();
 }
 
 async function activateLicense() {
@@ -108,7 +58,6 @@ async function activateLicense() {
   }
 
   btn.disabled = true;
-  focusBtn.disabled = true;
   btn.textContent = "Activando...";
 
   try {
@@ -137,17 +86,19 @@ async function activateLicense() {
     msg.textContent = "Error de conexión. Intenta otra vez.";
   } finally {
     btn.disabled = false;
-    focusBtn.disabled = false;
     btn.textContent = "Activar";
   }
 }
 
 checkExistingAccess();
-setupIOSInputFix();
 
 form.addEventListener("submit", (e) => {
   e.preventDefault();
   activateLicense();
+});
+
+input.addEventListener("input", () => {
+  input.value = input.value.toUpperCase();
 });
 
 input.addEventListener("keydown", (e) => {
@@ -155,8 +106,4 @@ input.addEventListener("keydown", (e) => {
     e.preventDefault();
     activateLicense();
   }
-});
-
-input.addEventListener("input", () => {
-  input.value = input.value.toUpperCase();
 });
