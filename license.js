@@ -27,9 +27,13 @@ async function checkExistingAccess() {
 
     if (res.ok) {
       window.location.replace("/index.html");
+      return;
     }
+
+    localStorage.removeItem("license_key");
+    localStorage.removeItem("license_activated");
   } catch (error) {
-    // No redirige si falla, para permitir reintentar manualmente
+    console.error("CHECK EXISTING ACCESS ERROR:", error);
   }
 }
 
@@ -41,7 +45,9 @@ const msg = document.getElementById("licenseMsg");
 
 btn.addEventListener("click", activateLicense);
 input.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") activateLicense();
+  if (e.key === "Enter") {
+    activateLicense();
+  }
 });
 
 async function activateLicense() {
@@ -74,11 +80,13 @@ async function activateLicense() {
       return;
     }
 
+    localStorage.setItem("device_id", deviceId);
     localStorage.setItem("license_key", licenseKey);
     localStorage.setItem("license_activated", "true");
 
     window.location.replace("/index.html");
   } catch (error) {
+    console.error("ACTIVATE LICENSE FRONTEND ERROR:", error);
     msg.textContent = "Error de conexión. Intenta otra vez.";
   } finally {
     btn.disabled = false;
