@@ -22,6 +22,10 @@ export default async function handler(req, res) {
 
     const data = snap.data();
 
+    console.log("LICENSE KEY:", licenseKey);
+    console.log("DEVICE ID:", deviceId);
+    console.log("DOC DATA:", data);
+
     if (data.blocked === true) {
       return res.status(403).json({ error: "Licencia bloqueada." });
     }
@@ -33,7 +37,7 @@ export default async function handler(req, res) {
         used: true
       });
 
-      return res.status(200).json({ ok: true });
+      return res.status(200).json({ ok: true, message: "Licencia activada correctamente." });
     }
 
     if (data.boundDeviceId !== deviceId) {
@@ -42,8 +46,9 @@ export default async function handler(req, res) {
       });
     }
 
-    return res.status(200).json({ ok: true });
+    return res.status(200).json({ ok: true, message: "Licencia válida para este dispositivo." });
   } catch (error) {
+    console.error("ACTIVATE LICENSE ERROR:", error);
     return res.status(500).json({ error: "Error interno del servidor." });
   }
 }
