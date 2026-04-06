@@ -9,6 +9,10 @@ function getOrCreateDeviceId() {
   return deviceId;
 }
 
+const input = document.getElementById("licenseInput");
+const btn = document.getElementById("activateBtn");
+const msg = document.getElementById("licenseMsg");
+
 async function checkExistingAccess() {
   const licenseKey = localStorage.getItem("license_key");
   const deviceId = localStorage.getItem("device_id");
@@ -37,21 +41,45 @@ async function checkExistingAccess() {
   }
 }
 
-checkExistingAccess();
+function setupIOSInputFix() {
+  if (!input) return;
 
-const input = document.getElementById("licenseInput");
-const btn = document.getElementById("activateBtn");
-const msg = document.getElementById("licenseMsg");
+  const forceFocus = () => {
+    setTimeout(() => {
+      input.focus();
+      input.click();
+      const end = input.value.length;
+      try {
+        input.setSelectionRange(end, end);
+      } catch (e) {}
+    }, 60);
+  };
 
-btn.addEventListener("click", activateLicense);
-input.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") {
-    activateLicense();
-  }
-});
+  input.addEventListener("touchstart", () => {
+    forceFocus();
+  });
+
+  input.addEventListener("touchend", () => {
+    forceFocus();
+  });
+
+  input.addEventListener("click", () => {
+    forceFocus();
+  });
+
+  window.addEventListener("pageshow", () => {
+    setTimeout(() => {
+      input.blur();
+    }, 50);
+  });
+}
+
+function normalizeLicenseValue(value) {
+  return value.toUpperCase().trim();
+}
 
 async function activateLicense() {
-  const licenseKey = input.value.trim().toUpperCase();
+  const licenseKey = normalizeLicenseValue(input.value);
   const deviceId = getOrCreateDeviceId();
 
   msg.textContent = "";
@@ -93,3 +121,18 @@ async function activateLicense() {
     btn.textContent = "Activar";
   }
 }
+
+checkExistingAccess();
+setupIOSInputFix();
+
+btn.addEventListener("click", activateLicense);
+
+input.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    activateLicense();
+  }
+});
+
+input.addEventListener("input", () => {
+  input.value = input.value.toUpperCase();
+});
