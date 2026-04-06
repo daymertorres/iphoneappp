@@ -13,6 +13,10 @@ const input = document.getElementById("licenseInput");
 const btn = document.getElementById("activateBtn");
 const msg = document.getElementById("licenseMsg");
 
+function isStandaloneMode() {
+  return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+}
+
 async function checkExistingAccess() {
   const licenseKey = localStorage.getItem("license_key");
   const deviceId = localStorage.getItem("device_id");
@@ -55,17 +59,9 @@ function setupIOSInputFix() {
     }, 60);
   };
 
-  input.addEventListener("touchstart", () => {
-    forceFocus();
-  });
-
-  input.addEventListener("touchend", () => {
-    forceFocus();
-  });
-
-  input.addEventListener("click", () => {
-    forceFocus();
-  });
+  input.addEventListener("touchstart", forceFocus);
+  input.addEventListener("touchend", forceFocus);
+  input.addEventListener("click", forceFocus);
 
   window.addEventListener("pageshow", () => {
     setTimeout(() => {
@@ -78,7 +74,21 @@ function normalizeLicenseValue(value) {
   return value.toUpperCase().trim();
 }
 
+function blockActivationOutsideStandalone() {
+  if (isStandaloneMode()) return false;
+
+  input.disabled = true;
+  btn.disabled = true;
+  msg.textContent = "Primero añade la app a pantalla de inicio y ábrela desde ahí para activar la licencia.";
+  return true;
+}
+
 async function activateLicense() {
+  if (!isStandaloneMode()) {
+    msg.textContent = "Abre esta app desde la pantalla de inicio para activar la licencia.";
+    return;
+  }
+
   const licenseKey = normalizeLicenseValue(input.value);
   const deviceId = getOrCreateDeviceId();
 
@@ -125,14 +135,18 @@ async function activateLicense() {
 checkExistingAccess();
 setupIOSInputFix();
 
-btn.addEventListener("click", activateLicense);
+const blocked = blockActivationOutsideStandalone();
 
-input.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") {
-    activateLicense();
-  }
-});
+if (!blocked) {
+  btn.addEventListener("click", activateLicense);
 
-input.addEventListener("input", () => {
-  input.value = input.value.toUpperCase();
-});
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      activateLicense();
+    }
+  });
+
+  input.addEventListener("input", () => {
+    input.value = input.value.toUpperCase();
+  });
+}
