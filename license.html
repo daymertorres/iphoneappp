@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Activar licencia</title>
+  <meta name="theme-color" content="#000000" />
+  <link rel="stylesheet" href="license.css" />
+</head>
+<body>
+  <main class="license-page">
+    <div class="license-card">
+      <h1>Activar acceso</h1>
+      <p class="subtitle">
+        Ingresa tu licencia. Esta activación quedará vinculada a este dispositivo.
+      </p>
+
+      <input
+        id="licenseInput"
+        class="license-input"
+        type="text"
+        placeholder="XXXX-XXXX-XXXX-XXXX"
+        autocomplete="off"
+        autocapitalize="characters"
+        spellcheck="false"
+      />
+
+      <button id="activateBtn" class="activate-btn">Activar</button>
+      <p id="licenseMsg" class="license-msg"></p>
+    </div>
+  </main>
+
+  <script src="license.js"></script>
+</body>
+</html>

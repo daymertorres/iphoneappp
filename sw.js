@@ -4,7 +4,11 @@ const FILES_TO_CACHE = [
   "./index.html",
   "./style.css",
   "./script.js",
-  "./manifest.json"
+  "./manifest.json",
+  "./license.html",
+"./license.js",
+"./license.css",
+"./auth-guard.js",
 ];
 
 self.addEventListener("install", (event) => {
