@@ -1,3 +1,15 @@
+const LICENSE_GROUPS = [4, 4, 4, 4];
+const MAX_LICENSE_LENGTH = LICENSE_GROUPS.reduce((a, b) => a + b, 0);
+
+const display = document.getElementById("licenseDisplay");
+const keys = document.querySelectorAll(".license-key");
+const deleteBtn = document.getElementById("deleteBtn");
+const clearBtn = document.getElementById("clearBtn");
+const activateBtn = document.getElementById("activateBtn");
+const msg = document.getElementById("licenseMsg");
+
+let rawLicense = "";
+
 function getOrCreateDeviceId() {
   let deviceId = localStorage.getItem("device_id");
 
@@ -9,10 +21,23 @@ function getOrCreateDeviceId() {
   return deviceId;
 }
 
-const form = document.getElementById("licenseForm");
-const input = document.getElementById("licenseInput");
-const btn = document.getElementById("activateBtn");
-const msg = document.getElementById("licenseMsg");
+function formatLicense(value) {
+  let cursor = 0;
+  const parts = [];
+
+  for (const size of LICENSE_GROUPS) {
+    const chunk = value.slice(cursor, cursor + size);
+    if (!chunk) break;
+    parts.push(chunk);
+    cursor += size;
+  }
+
+  return parts.join("-");
+}
+
+function updateDisplay() {
+  display.textContent = rawLicense ? formatLicense(rawLicense) : "----";
+}
 
 async function checkExistingAccess() {
   const licenseKey = localStorage.getItem("license_key");
@@ -42,23 +67,21 @@ async function checkExistingAccess() {
   }
 }
 
-function normalizeLicenseValue(value) {
-  return value.toUpperCase().trim();
-}
-
 async function activateLicense() {
-  const licenseKey = normalizeLicenseValue(input.value);
+  const licenseKey = formatLicense(rawLicense);
   const deviceId = getOrCreateDeviceId();
 
   msg.textContent = "";
 
-  if (!licenseKey) {
-    msg.textContent = "Ingresa una licencia válida.";
+  if (rawLicense.length !== MAX_LICENSE_LENGTH) {
+    msg.textContent = "Completa la licencia antes de activar.";
     return;
   }
 
-  btn.disabled = true;
-  btn.textContent = "Activando...";
+  activateBtn.disabled = true;
+  deleteBtn.disabled = true;
+  clearBtn.disabled = true;
+  activateBtn.textContent = "Activando...";
 
   try {
     const res = await fetch("/api/activate-license", {
@@ -85,25 +108,34 @@ async function activateLicense() {
     console.error("ACTIVATE LICENSE FRONTEND ERROR:", error);
     msg.textContent = "Error de conexión. Intenta otra vez.";
   } finally {
-    btn.disabled = false;
-    btn.textContent = "Activar";
+    activateBtn.disabled = false;
+    deleteBtn.disabled = false;
+    clearBtn.disabled = false;
+    activateBtn.textContent = "Activar";
   }
 }
 
+keys.forEach((key) => {
+  key.addEventListener("click", () => {
+    if (rawLicense.length >= MAX_LICENSE_LENGTH) return;
+    rawLicense += key.dataset.value;
+    updateDisplay();
+    msg.textContent = "";
+  });
+});
+
+deleteBtn.addEventListener("click", () => {
+  rawLicense = rawLicense.slice(0, -1);
+  updateDisplay();
+});
+
+clearBtn.addEventListener("click", () => {
+  rawLicense = "";
+  updateDisplay();
+  msg.textContent = "";
+});
+
+activateBtn.addEventListener("click", activateLicense);
+
 checkExistingAccess();
-
-form.addEventListener("submit", (e) => {
-  e.preventDefault();
-  activateLicense();
-});
-
-input.addEventListener("input", () => {
-  input.value = input.value.toUpperCase();
-});
-
-input.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") {
-    e.preventDefault();
-    activateLicense();
-  }
-});
+updateDisplay();
