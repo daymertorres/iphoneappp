@@ -26,19 +26,9 @@ export default async function handler(req, res) {
       return res.status(403).json({ error: "Licencia bloqueada." });
     }
 
-    if (!data.boundDeviceId) {
-      await ref.update({
-        boundDeviceId: deviceId,
-        activatedAt: new Date().toISOString(),
-        used: true
-      });
-
-      return res.status(200).json({ ok: true });
-    }
-
     if (data.boundDeviceId !== deviceId) {
       return res.status(403).json({
-        error: "Esta licencia ya fue activada en otro dispositivo."
+        error: "Este dispositivo no está autorizado."
       });
     }
 
