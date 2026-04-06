@@ -23,9 +23,6 @@ export default async function handler(req, res) {
     const snap = await ref.get();
 
     console.log("CHECK DOC EXISTS:", snap.exists);
-    if (snap.exists) {
-      console.log("CHECK DOC DATA:", snap.data());
-    }
 
     if (!snap.exists) {
       return res.status(404).json({ error: "Licencia inválida." });
@@ -33,11 +30,28 @@ export default async function handler(req, res) {
 
     const data = snap.data();
 
+    console.log("CHECK DOC DATA:", data);
+
     if (data.blocked === true) {
       return res.status(403).json({ error: "Licencia bloqueada." });
     }
 
-    if (data.boundDeviceId !== deviceId) {
+    const rawBoundDeviceId = typeof data.boundDeviceId === "string"
+      ? data.boundDeviceId.trim()
+      : "";
+
+    const normalizedBoundDeviceId =
+      rawBoundDeviceId === "" || rawBoundDeviceId === '""'
+        ? ""
+        : rawBoundDeviceId;
+
+    if (!normalizedBoundDeviceId) {
+      return res.status(403).json({
+        error: "La licencia aún no ha sido activada."
+      });
+    }
+
+    if (normalizedBoundDeviceId !== deviceId) {
       return res.status(403).json({
         error: "Este dispositivo no está autorizado."
       });
