@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"
+  />
+  <title>Panel Admin - Licencias</title>
+  <meta name="theme-color" content="#000000" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+  <main class="admin-page">
+    <section class="admin-card">
+      <div class="admin-header">
+        <h1>Panel Admin</h1>
+        <p>Gestiona licencias de tu app.</p>
+      </div>
+
+      <div id="loginBox" class="admin-auth-box">
+        <input
+          id="adminUserInput"
+          type="text"
+          class="admin-input"
+          placeholder="Usuario"
+          autocomplete="off"
+        />
+        <input
+          id="adminPassInput"
+          type="password"
+          class="admin-input"
+          placeholder="Contraseña"
+          autocomplete="off"
+        />
+        <button id="loginBtn" class="primary-btn" type="button">Entrar</button>
+        <p id="loginMsg" class="status-msg"></p>
+      </div>
+
+      <div id="adminApp" class="hidden">
+        <div class="top-actions">
+          <button id="logoutBtn" class="secondary-btn" type="button">Cerrar sesión</button>
+        </div>
+
+        <div class="create-box">
+          <button id="createLicenseBtn" class="primary-btn" type="button">
+            Crear licencia aleatoria
+          </button>
+        </div>
+
+        <div class="generated-box">
+          <label>Última licencia generada</label>
+          <div class="generated-row">
+            <div id="generatedLicense" class="generated-license">----</div>
+            <button id="copyLicenseBtn" class="secondary-btn" type="button">
+              Copiar
+            </button>
+          </div>
+        </div>
+
+        <div class="toolbar">
+          <input
+            id="searchInput"
+            type="text"
+            class="admin-input"
+            placeholder="Buscar licencia..."
+            autocomplete="off"
+          />
+          <button id="refreshBtn" class="secondary-btn" type="button">
+            Actualizar
+          </button>
+        </div>
+
+        <div id="statusMsg" class="status-msg"></div>
+
+        <div class="table-wrap">
+          <table class="licenses-table">
+            <thead>
+              <tr>
+                <th>Licencia</th>
+                <th>Usada</th>
+                <th>Bloqueada</th>
+                <th>Device ID</th>
+                <th>Activada</th>
+                <th>Guardar</th>
+              </tr>
+            </thead>
+            <tbody id="licensesTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"
+  />
+  <title>Teléfono</title>
+
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Teléfono" />
+  <meta name="theme-color" content="#000000" />
+
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icons/icon-180.png" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <div class="screen">
+      <header class="topbar">
+        <div class="top-left">
+          <div class="carrier-badge">P</div>
+          <div class="carrier-arrows" aria-hidden="true">
+  <svg
+    viewBox="0 0 14 22"
+    width="14"
+    height="22"
+    style="display:block; margin-left:1px; transform:translateY(-1px);"
+  >
+    <path
+      d="M2 8 L7 3 L12 8"
+      fill="none"
+      stroke="#8e8e93"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M2 14 L7 19 L12 14"
+      fill="none"
+      stroke="#8e8e93"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </svg>
+</div>
+
+
+
+
+
+
+
+
+
+
+        
+      </header>
+
+      <main class="views-container">
+        <!-- Favoritos -->
+        <div id="view-favorites" class="view hidden">
+          <div class="view-header">
+            <h1>Favoritos</h1>
+            <button class="header-btn">+</button>
+          </div>
+          <div class="empty-state">
+            <h2>Sin favoritos</h2>
+            <p>Añade favoritos para llamar con un toque.</p>
+          </div>
+        </div>
+
+        <!-- Recientes -->
+        <div id="view-recents" class="view hidden">
+          <div class="view-header">
+            <h1>Recientes</h1>
+            <div class="header-segment">
+              <button class="segment-btn active">Todas</button>
+              <button class="segment-btn">Perdidas</button>
+            </div>
+            <button class="header-btn right">Editar</button>
+          </div>
+          <div class="empty-state">
+            <h2>No hay llamadas recientes</h2>
+          </div>
+        </div>
+
+        <!-- Contactos -->
+        <div id="view-contacts" class="view hidden">
+          <div class="view-header">
+            <h1>Contactos</h1>
+            <button class="header-btn">+</button>
+          </div>
+          <div class="search-bar">
+            <input type="text" placeholder="Buscar" />
+          </div>
+          <div class="empty-state">
+            <h2>Sin contactos</h2>
+          </div>
+        </div>
+
+        <!-- Teclado -->
+        <div id="view-keypad" class="view active dialer-area">
+          <div id="display" class="display"> </div>
+
+          <div class="keypad">
+            <button class="key" data-value="1">
+              <span class="digit">1</span>
+            </button>
+
+            <button class="key" data-value="2">
+              <span class="digit">2</span>
+              <span class="letters">ABC</span>
+            </button>
+
+            <button class="key" data-value="3">
+              <span class="digit">3</span>
+              <span class="letters">DEF</span>
+            </button>
+
+            <button class="key" data-value="4">
+              <span class="digit">4</span>
+              <span class="letters">GHI</span>
+            </button>
+
+            <button class="key" data-value="5">
+              <span class="digit">5</span>
+              <span class="letters">JKL</span>
+            </button>
+
+            <button class="key" data-value="6">
+              <span class="digit">6</span>
+              <span class="letters">MNO</span>
+            </button>
+
+            <button class="key" data-value="7">
+              <span class="digit">7</span>
+              <span class="letters">PQRS</span>
+            </button>
+
+            <button class="key" data-value="8">
+              <span class="digit">8</span>
+              <span class="letters">TUV</span>
+            </button>
+
+            <button class="key" data-value="9">
+              <span class="digit">9</span>
+              <span class="letters">WXYZ</span>
+            </button>
+
+            <button class="key" data-value="*">
+              <span class="digit">*</span>
+            </button>
+
+            <button class="key" data-value="0">
+              <span class="digit">0</span>
+              <span class="letters plus">+</span>
+            </button>
+
+            <button class="key" data-value="#">
+              <span class="digit">#</span>
+            </button>
+          </div>
+
+          <div class="actions-row">
+            <div class="actions-spacer"></div>
+
+            <button id="callBtn" class="call-btn" aria-label="Llamar">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="M20.52 15.38c-1.23 0-2.42-.2-3.53-.57a1 1 0 0 0-1 .24l-2.2 2.2a15.06 15.06 0 0 1-6.04-6.04l2.2-2.2a1 1 0 0 0 .24-1 11.2 11.2 0 0 1-.57-3.53A1.5 1.5 0 0 0 8.12 3H4.5A1.5 1.5 0 0 0 3 4.5C3 14.17 10.83 22 20.5 22a1.5 1.5 0 0 0 1.5-1.5v-3.62a1.5 1.5 0 0 0-1.48-1.5z"
+                />
+              </svg>
+            </button>
+
+          <button id="deleteBtn" class="delete-btn" aria-label="Borrar">
+    <svg
+      viewBox="0 0 50 36"
+      width="34"
+      height="24"
+      style="display:block"
+    >
+      <!-- forma correcta tipo iPhone -->
+      <path
+        d="M14 6
+           H34
+           C37 6 39 8 39 11
+           V25
+           C39 28 37 30 34 30
+           H14
+           L5 18
+           Z"
+        fill="#2c2c2e"
+      />
+
+      <!-- X centrada -->
+      <path
+        d="M21 13 L29 21 M29 13 L21 21"
+        stroke="#ffffff"
+        stroke-width="2.2"
+        stroke-linecap="round"
+      />
+    </svg>
+  </button>
+          </div>
+        </div>
+
+        <!-- Buzón de voz -->
+        <div id="view-voicemail" class="view hidden">
+          <div class="view-header">
+            <h1>Buzón de voz</h1>
+          </div>
+          <div class="empty-state">
+            <button class="call-voicemail-btn">Llamar al buzón de voz</button>
+          </div>
+        </div>
+      </main>
+
+
+      <nav class="bottom-tabs">
+        <button class="tab" data-target="view-favorites">
+          <span class="tab-icon">★</span>
+          <span class="tab-label">Favoritos</span>
+        </button>
+
+        <button class="tab" data-target="view-recents">
+          <span class="tab-icon">◔</span>
+          <span class="tab-label">Recientes</span>
+        </button>
+
+        <button class="tab" data-target="view-contacts">
+          <span class="tab-icon">◉</span>
+          <span class="tab-label">Contactos</span>
+        </button>
+
+        <button class="tab active" data-target="view-keypad">
+          <span class="tab-grid" aria-hidden="true">
+            <i></i><i></i><i></i>
+            <i></i><i></i><i></i>
+            <i></i><i></i><i></i>
+          </span>
+          <span class="tab-label">Teclado</span>
+        </button>
+
+        <button class="tab" data-target="view-voicemail">
+          <span class="tab-icon voicemail">◉◉</span>
+          <span class="tab-label">Buzón de voz</span>
+        </button>
+      </nav>
+
+      <div class="home-indicator"></div>
+    </div>
+  </div>
+
+  <div id="infoOverlay" class="overlay hidden">
+    <div class="info-sheet">
+      <button id="closeInfoBtn" class="cancel-btn">Cancelar</button>
+
+      <div class="info-content">
+  <h1>Información</h1>
+
+  <div class="info-block">
+    <div class="info-label">EID</div>
+    <div id="eidValue" class="info-value eid"></div>
+    <div class="barcode-box">
+      <svg id="eidBarcode"></svg>
+    </div>
+  </div>
+
+  <div class="info-block">
+    <div id="imei1Value" class="info-value imei-line"></div>
+    <div class="barcode-box">
+      <svg id="imei1Barcode"></svg>
+    </div>
+  </div>
+
+  <div class="info-block">
+    <div id="imei2Value" class="info-value imei-line"></div>
+    <div class="barcode-box">
+      <svg id="imei2Barcode"></svg>
+    </div>
+  </div>
+</div>
+
+      <div class="sheet-home-indicator"></div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+<script src="auth-guard.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
