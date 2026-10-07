@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"
-  />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
   <title>Teléfono</title>
 
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -17,37 +15,12 @@
   <link rel="apple-touch-icon" href="icons/icon-180.png" />
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
   <div class="app">
     <div class="screen">
       <header class="topbar">
         <div class="top-left">
-          <div class="carrier-badge">P</div>
-          <div class="carrier-arrows" aria-hidden="true">
-  <svg
-    viewBox="0 0 14 22"
-    width="14"
-    height="22"
-    style="display:block; margin-left:1px; transform:translateY(-1px);"
-  >
-    <path
-      d="M2 8 L7 3 L12 8"
-      fill="none"
-      stroke="#8e8e93"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    />
-    <path
-      d="M2 14 L7 19 L12 14"
-      fill="none"
-      stroke="#8e8e93"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    />
-  </svg>
-</div>
 
 
 
@@ -55,10 +28,6 @@
 
 
 
-
-
-
-        
       </header>
 
       <main class="views-container">
@@ -172,40 +141,26 @@
             <button id="callBtn" class="call-btn" aria-label="Llamar">
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path
-                  d="M20.52 15.38c-1.23 0-2.42-.2-3.53-.57a1 1 0 0 0-1 .24l-2.2 2.2a15.06 15.06 0 0 1-6.04-6.04l2.2-2.2a1 1 0 0 0 .24-1 11.2 11.2 0 0 1-.57-3.53A1.5 1.5 0 0 0 8.12 3H4.5A1.5 1.5 0 0 0 3 4.5C3 14.17 10.83 22 20.5 22a1.5 1.5 0 0 0 1.5-1.5v-3.62a1.5 1.5 0 0 0-1.48-1.5z"
-                />
+                  d="M20.52 15.38c-1.23 0-2.42-.2-3.53-.57a1 1 0 0 0-1 .24l-2.2 2.2a15.06 15.06 0 0 1-6.04-6.04l2.2-2.2a1 1 0 0 0 .24-1 11.2 11.2 0 0 1-.57-3.53A1.5 1.5 0 0 0 8.12 3H4.5A1.5 1.5 0 0 0 3 4.5C3 14.17 10.83 22 20.5 22a1.5 1.5 0 0 0 1.5-1.5v-3.62a1.5 1.5 0 0 0-1.48-1.5z" />
               </svg>
             </button>
 
-          <button id="deleteBtn" class="delete-btn" aria-label="Borrar">
-    <svg
-      viewBox="0 0 50 36"
-      width="34"
-      height="24"
-      style="display:block"
-    >
-      <!-- forma correcta tipo iPhone -->
-      <path
-        d="M14 6
+            <button id="deleteBtn" class="delete-btn" aria-label="Borrar">
+              <svg viewBox="0 0 50 36" width="34" height="24" style="display:block">
+                <!-- forma correcta tipo iPhone -->
+                <path d="M14 6
            H34
            C37 6 39 8 39 11
            V25
            C39 28 37 30 34 30
            H14
            L5 18
-           Z"
-        fill="#2c2c2e"
-      />
+           Z" fill="#2c2c2e" />
 
-      <!-- X centrada -->
-      <path
-        d="M21 13 L29 21 M29 13 L21 21"
-        stroke="#ffffff"
-        stroke-width="2.2"
-        stroke-linecap="round"
-      />
-    </svg>
-  </button>
+                <!-- X centrada -->
+                <path d="M21 13 L29 21 M29 13 L21 21" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" />
+              </svg>
+            </button>
           </div>
         </div>
 
@@ -261,37 +216,38 @@
       <button id="closeInfoBtn" class="cancel-btn">Cancelar</button>
 
       <div class="info-content">
-  <h1>Información</h1>
+        <h1>Información</h1>
 
-  <div class="info-block">
-    <div class="info-label">EID</div>
-    <div id="eidValue" class="info-value eid"></div>
-    <div class="barcode-box">
-      <svg id="eidBarcode"></svg>
-    </div>
-  </div>
+        <div class="info-block">
+          <div class="info-label">EID</div>
+          <div id="eidValue" class="info-value eid"></div>
+          <div class="barcode-box">
+            <svg id="eidBarcode"></svg>
+          </div>
+        </div>
 
-  <div class="info-block">
-    <div id="imei1Value" class="info-value imei-line"></div>
-    <div class="barcode-box">
-      <svg id="imei1Barcode"></svg>
-    </div>
-  </div>
+        <div class="info-block">
+          <div id="imei1Value" class="info-value imei-line"></div>
+          <div class="barcode-box">
+            <svg id="imei1Barcode"></svg>
+          </div>
+        </div>
 
-  <div class="info-block">
-    <div id="imei2Value" class="info-value imei-line"></div>
-    <div class="barcode-box">
-      <svg id="imei2Barcode"></svg>
-    </div>
-  </div>
-</div>
+        <div class="info-block">
+          <div id="imei2Value" class="info-value imei-line"></div>
+          <div class="barcode-box">
+            <svg id="imei2Barcode"></svg>
+          </div>
+        </div>
+      </div>
 
       <div class="sheet-home-indicator"></div>
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
-<script src="auth-guard.js"></script>
-<script src="script.js"></script>
+  <script src="auth-guard.js"></script>
+  <script src="script.js"></script>
 </body>
+
 </html>
