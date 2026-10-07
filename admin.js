@@ -149,7 +149,7 @@ function renderLicenses(items) {
       if (!confirm(`¿Eliminar la licencia ${item.key}? Esta acción no se puede deshacer.`)) return;
       try {
         deleteBtn.disabled = true;
-        await apiPost("/api/delete-license", { licenseKey: item.key });
+        await apiPost("/api/update-license", { licenseKey: item.key, action: "delete" });
         setStatus(`Licencia ${item.key} eliminada.`);
         await loadLicenses();
       } catch (error) {
