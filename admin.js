@@ -11,6 +11,10 @@ const createLicenseBtn = document.getElementById("createLicenseBtn");
 const generatedLicense = document.getElementById("generatedLicense");
 const copyLicenseBtn = document.getElementById("copyLicenseBtn");
 const searchInput = document.getElementById("searchInput");
+const filterClient = document.getElementById("filterClient");
+const filterDateFrom = document.getElementById("filterDateFrom");
+const filterDateTo = document.getElementById("filterDateTo");
+const clearFiltersBtn = document.getElementById("clearFiltersBtn");
 const refreshBtn = document.getElementById("refreshBtn");
 const statusMsg = document.getElementById("statusMsg");
 const licensesTableBody = document.getElementById("licensesTableBody");
@@ -164,14 +168,33 @@ function renderLicenses(items) {
 }
 
 function filterAndRender() {
-  const term = searchInput.value.trim().toUpperCase();
+  const termKey    = searchInput.value.trim().toUpperCase();
+  const termClient = filterClient.value.trim().toUpperCase();
+  const dateFrom   = filterDateFrom.value ? new Date(filterDateFrom.value) : null;
+  const dateTo     = filterDateTo.value   ? new Date(filterDateTo.value + "T23:59:59") : null;
 
-  if (!term) {
-    renderLicenses(allLicenses);
-    return;
-  }
+  const filtered = allLicenses.filter((item) => {
+    // Filtro por licencia
+    if (termKey && !item.key.toUpperCase().includes(termKey)) return false;
 
-  renderLicenses(allLicenses.filter((item) => item.key.includes(term)));
+    // Filtro por cliente
+    if (termClient) {
+      const cn = (item.clientName || "").toUpperCase();
+      if (!cn.includes(termClient)) return false;
+    }
+
+    // Filtro por fecha de activación
+    if (dateFrom || dateTo) {
+      if (!item.activatedAt) return false;
+      const activated = new Date(item.activatedAt);
+      if (dateFrom && activated < dateFrom) return false;
+      if (dateTo   && activated > dateTo)   return false;
+    }
+
+    return true;
+  });
+
+  renderLicenses(filtered);
 }
 
 async function loadLicenses() {
@@ -275,6 +298,17 @@ copyLicenseBtn.addEventListener("click", async () => {
 
 refreshBtn.addEventListener("click", loadLicenses);
 searchInput.addEventListener("input", filterAndRender);
+filterClient.addEventListener("input", filterAndRender);
+filterDateFrom.addEventListener("change", filterAndRender);
+filterDateTo.addEventListener("change", filterAndRender);
+
+clearFiltersBtn.addEventListener("click", () => {
+  searchInput.value = "";
+  filterClient.value = "";
+  filterDateFrom.value = "";
+  filterDateTo.value = "";
+  filterAndRender();
+});
 
 if (isLoggedIn()) {
   showPanel();

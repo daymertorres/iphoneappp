@@ -173,12 +173,46 @@ input {
   font-size: 15px;
 }
 
-/* ===== TOOLBAR ===== */
+/* ===== FILTER PANEL ===== */
 
-.toolbar {
+.filter-panel {
+  background: #0f1012;
+  border: 1px solid #1f2126;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.filter-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filter-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #7a7d85;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.filter-actions {
   display: flex;
   gap: 10px;
-  margin-bottom: 16px;
+  justify-content: flex-end;
+}
+
+/* ===== date input dark style ===== */
+input[type="date"].admin-input {
+  color-scheme: dark;
 }
 
 /* ===== MENSAJES ===== */

@@ -1,17 +1,16 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"
-  />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
   <title>Panel Admin - Licencias</title>
   <meta name="theme-color" content="#000000" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <link rel="stylesheet" href="admin.css" />
 </head>
+
 <body>
   <main class="admin-page">
     <section class="admin-card">
@@ -21,20 +20,8 @@
       </div>
 
       <div id="loginBox" class="admin-auth-box">
-        <input
-          id="adminUserInput"
-          type="text"
-          class="admin-input"
-          placeholder="Usuario"
-          autocomplete="off"
-        />
-        <input
-          id="adminPassInput"
-          type="password"
-          class="admin-input"
-          placeholder="Contraseña"
-          autocomplete="off"
-        />
+        <input id="adminUserInput" type="text" class="admin-input" placeholder="Usuario" autocomplete="off" />
+        <input id="adminPassInput" type="password" class="admin-input" placeholder="Contraseña" autocomplete="off" />
         <button id="loginBtn" class="primary-btn" type="button">Entrar</button>
         <p id="loginMsg" class="status-msg"></p>
       </div>
@@ -60,17 +47,31 @@
           </div>
         </div>
 
-        <div class="toolbar">
-          <input
-            id="searchInput"
-            type="text"
-            class="admin-input"
-            placeholder="Buscar licencia..."
-            autocomplete="off"
-          />
-          <button id="refreshBtn" class="secondary-btn" type="button">
-            Actualizar
-          </button>
+        <div class="filter-panel">
+          <div class="filter-row">
+            <div class="filter-group">
+              <label class="filter-label">Licencia</label>
+              <input id="searchInput" type="text" class="admin-input" placeholder="Ej: ABCD-1234..."
+                autocomplete="off" />
+            </div>
+            <div class="filter-group">
+              <label class="filter-label">Cliente</label>
+              <input id="filterClient" type="text" class="admin-input" placeholder="Nombre del cliente..."
+                autocomplete="off" />
+            </div>
+            <div class="filter-group">
+              <label class="filter-label">Activada desde</label>
+              <input id="filterDateFrom" type="date" class="admin-input" />
+            </div>
+            <div class="filter-group">
+              <label class="filter-label">Activada hasta</label>
+              <input id="filterDateTo" type="date" class="admin-input" />
+            </div>
+          </div>
+          <div class="filter-actions">
+            <button id="clearFiltersBtn" class="secondary-btn" type="button">Limpiar filtros</button>
+            <button id="refreshBtn" class="secondary-btn" type="button">Actualizar</button>
+          </div>
         </div>
 
         <div id="statusMsg" class="status-msg"></div>
@@ -98,4 +99,5 @@
 
   <script src="admin.js"></script>
 </body>
+
 </html>
