@@ -258,3 +258,32 @@ input {
     justify-content: center;
   }
 }
+
+/* ===== BOTÓN ELIMINAR ===== */
+
+.delete-lic-btn {
+  background: #3a1010;
+  color: #ff6b6b;
+  border: 1px solid #5a1a1a;
+  border-radius: 10px;
+  padding: 6px 14px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background 0.2s, color 0.2s;
+  white-space: nowrap;
+}
+
+.delete-lic-btn:hover {
+  background: #5c1a1a;
+  color: #ff9999;
+}
+
+.delete-lic-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.client-input {
+  min-width: 120px;
+}

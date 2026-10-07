@@ -85,7 +85,7 @@ function renderLicenses(items) {
   if (!items.length) {
     licensesTableBody.innerHTML = `
       <tr>
-        <td colspan="6">No hay licencias.</td>
+        <td colspan="8">No hay licencias.</td>
       </tr>
     `;
     return;
@@ -96,6 +96,9 @@ function renderLicenses(items) {
 
     tr.innerHTML = `
       <td>${item.key}</td>
+      <td>
+        <input class="small-input client-input" type="text" value="${item.clientName || ""}" placeholder="Cliente (opcional)" />
+      </td>
       <td>
         <input class="toggle used-toggle" type="checkbox" ${item.used ? "checked" : ""} />
       </td>
@@ -109,12 +112,17 @@ function renderLicenses(items) {
       <td>
         <button class="save-btn" type="button">Guardar</button>
       </td>
+      <td>
+        <button class="delete-lic-btn" type="button">Eliminar</button>
+      </td>
     `;
 
     const usedToggle = tr.querySelector(".used-toggle");
     const blockedToggle = tr.querySelector(".blocked-toggle");
     const deviceInput = tr.querySelector(".device-input");
+    const clientInput = tr.querySelector(".client-input");
     const saveBtn = tr.querySelector(".save-btn");
+    const deleteBtn = tr.querySelector(".delete-lic-btn");
 
     saveBtn.addEventListener("click", async () => {
       try {
@@ -124,7 +132,8 @@ function renderLicenses(items) {
           licenseKey: item.key,
           used: usedToggle.checked,
           blocked: blockedToggle.checked,
-          boundDeviceId: deviceInput.value.trim()
+          boundDeviceId: deviceInput.value.trim(),
+          clientName: clientInput.value.trim()
         });
 
         setStatus(`Licencia ${item.key} actualizada.`);
@@ -133,6 +142,20 @@ function renderLicenses(items) {
         setStatus(error.message, true);
       } finally {
         saveBtn.disabled = false;
+      }
+    });
+
+    deleteBtn.addEventListener("click", async () => {
+      if (!confirm(`¿Eliminar la licencia ${item.key}? Esta acción no se puede deshacer.`)) return;
+      try {
+        deleteBtn.disabled = true;
+        await apiPost("/api/delete-license", { licenseKey: item.key });
+        setStatus(`Licencia ${item.key} eliminada.`);
+        await loadLicenses();
+      } catch (error) {
+        setStatus(error.message, true);
+      } finally {
+        deleteBtn.disabled = false;
       }
     });
 
