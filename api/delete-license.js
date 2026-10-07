@@ -15,7 +15,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { licenseKey, used, blocked, boundDeviceId, clientName } = req.body ?? {};
+    const { licenseKey } = req.body ?? {};
 
     if (!licenseKey) {
       return res.status(400).json({ error: "Falta licenseKey." });
@@ -29,23 +29,11 @@ export default async function handler(req, res) {
       return res.status(404).json({ error: "Licencia no encontrada." });
     }
 
-    const current = snap.data();
-    const nextBoundDeviceId =
-      typeof boundDeviceId === "string" ? boundDeviceId.trim() : "";
-
-    await ref.update({
-      used: !!used,
-      blocked: !!blocked,
-      boundDeviceId: nextBoundDeviceId,
-      clientName: typeof clientName === "string" ? clientName.trim() : (current.clientName || ""),
-      activatedAt: nextBoundDeviceId
-        ? current.activatedAt || new Date().toISOString()
-        : null
-    });
+    await ref.delete();
 
     return res.status(200).json({ ok: true });
   } catch (error) {
-    console.error("UPDATE LICENSE ERROR:", error);
+    console.error("DELETE LICENSE ERROR:", error);
     return res.status(500).json({ error: "Error interno del servidor." });
   }
 }
