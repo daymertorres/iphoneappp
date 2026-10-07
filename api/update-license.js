@@ -15,7 +15,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { licenseKey, used, blocked, boundDeviceId, clientName } = req.body ?? {};
+    const { licenseKey, used, blocked, boundDeviceId, clientName, action } = req.body ?? {};
 
     if (!licenseKey) {
       return res.status(400).json({ error: "Falta licenseKey." });
@@ -29,6 +29,13 @@ export default async function handler(req, res) {
       return res.status(404).json({ error: "Licencia no encontrada." });
     }
 
+    // Si la acción es eliminar
+    if (action === "delete") {
+      await ref.delete();
+      return res.status(200).json({ ok: true, deleted: true });
+    }
+
+    // Actualizar campos
     const current = snap.data();
     const nextBoundDeviceId =
       typeof boundDeviceId === "string" ? boundDeviceId.trim() : "";
